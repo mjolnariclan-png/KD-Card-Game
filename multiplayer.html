@@ -895,7 +895,8 @@
     <div class="click-outside-detector" id="click-outside-detector"></div>
 
     <script>
-        const API_BASE = 'http://localhost:3005/api';
+        // Use the current origin (IP address the page is being served from)
+        const API_BASE = `${window.location.protocol}//${window.location.hostname}:${window.location.port}/api`;
         let playerId = `player_${Date.now()}`;
         let gameId = null;
         let playerIndex = 0;

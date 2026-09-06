@@ -7,6 +7,17 @@ const PORT = process.env.PORT || 3005;
 let games = {};
 let lobbyPlayers = [];
 
+// CORS middleware to allow cross-origin requests
+app.use((req, res, next) => {
+    res.header('Access-Control-Allow-Origin', '*');
+    res.header('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, OPTIONS');
+    res.header('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content-Type, Accept');
+    if (req.method === 'OPTIONS') {
+        return res.sendStatus(200);
+    }
+    next();
+});
+
 // Middleware to parse JSON
 app.use(express.json());
 
@@ -702,7 +713,7 @@ function generateDeck(player) {
 }
 
 // Start server
-app.listen(PORT, () => {
+app.listen(PORT, '0.0.0.0', () => {
     console.log(`Game server is running on http://localhost:${PORT}`);
     console.log(`Main menu: http://localhost:${PORT}/index.html`);
     console.log(`Multiplayer: http://localhost:${PORT}/multiplayer.html`);
