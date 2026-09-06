@@ -70,7 +70,7 @@ async function updateMongoDBUrls() {
                 }
             }
 
-            console.log(`Updated ${cards.filter(c => c.standard_path.includes('B\\')).length} cards for ${set.set_name}`);
+            console.log(`Updated ${cards.filter(c => c.standard_path && c.standard_path.includes('B\\')).length} cards for ${set.set_name}`);
         }
 
         console.log(`\n✅ Update complete!`);
