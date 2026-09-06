@@ -52,11 +52,11 @@ document.addEventListener("DOMContentLoaded", () => {
     console.log(`Deck size from URL: ${deckSize}`);
     console.log(`Mode from URL: ${mode}`);
 
-    if (!isNaN(deckSize) && deckSize >= 10 && deckSize <= 100) {
+    if (!isNaN(deckSize) && deckSize >= 60 && deckSize <= 100) {
         generateDeck(deckSize, mode);
     } else {
         console.error("Invalid deck size.");
-        alert("Invalid deck size."); // Debugging statement
+        alert("Invalid deck size. Please enter a deck size between 60 and 100."); // Debugging statement
         // Optionally, redirect to an error page or handle the error appropriately
         // window.location.href = "error-page.html"; // Change URL as needed
     }

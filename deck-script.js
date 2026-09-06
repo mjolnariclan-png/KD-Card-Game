@@ -7,10 +7,10 @@ document.getElementById("deck-selection-form").addEventListener("submit", functi
     const urlParams = new URLSearchParams(window.location.search);
     const mode = urlParams.get('mode') || 'ai';
 
-    if (deckSize >= 10 && deckSize <= 100) {
+    if (deckSize >= 60 && deckSize <= 100) {
         const url = `generating-deck.html?deck-size=${deckSize}&vigor-type=${vigorType}&mode=${mode}`;
         window.location.href = url;
     } else {
-        alert("Please enter a deck size between 10 and 100.");
+        alert("Please enter a deck size between 60 and 100.");
     }
 });

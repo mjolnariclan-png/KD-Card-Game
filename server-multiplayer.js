@@ -662,29 +662,29 @@ app.post('/api/auto-play-vigor', (req, res) => {
 });
 
 function generateDeck(player) {
-    // Generate 40-card deck (without vigor cards since vigor is accumulated automatically)
+    // Generate 60-card deck (without vigor cards since vigor is accumulated automatically)
     const deck = [];
 
     // 1 Primordial (cost 5)
     deck.push({ type: 'primordial', name: 'Primordial King', cost: 5, attack: 10, defense: 10, isPrimordial: true, canAttack: false });
 
-    // 24 Creatures (low cost for testing)
-    for (let i = 0; i < 24; i++) {
+    // 32 Creatures (increased to reach 60 cards)
+    for (let i = 0; i < 32; i++) {
         const attack = Math.floor(Math.random() * 5) + 1;
         const defense = Math.floor(Math.random() * 5) + 1;
         const cost = 1; // Low cost for testing
         const hasHaste = Math.random() < 0.2; // 20% chance of haste
         deck.push({ type: 'creature', name: `Creature ${i+1}`, cost: cost, attack: attack, defense: defense, hasHaste: hasHaste });
     }
-    
-    // 8 Runes (cost based on power)
-    for (let i = 0; i < 8; i++) {
+
+    // 12 Runes (increased to reach 60 cards)
+    for (let i = 0; i < 12; i++) {
         const cost = Math.floor(Math.random() * 3) + 1;
         deck.push({ type: 'rune', name: `Rune ${i+1}`, cost: cost, attack: 0, defense: 0 });
     }
-    
-    // 7 Equipment (low cost for testing)
-    for (let i = 0; i < 7; i++) {
+
+    // 15 Equipment (increased to reach 60 cards)
+    for (let i = 0; i < 15; i++) {
         const attack = Math.floor(Math.random() * 2);
         const defense = Math.floor(Math.random() * 2);
         const cost = 1;
