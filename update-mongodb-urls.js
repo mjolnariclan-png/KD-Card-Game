@@ -44,19 +44,19 @@ async function updateMongoDBUrls() {
                 const updatedCard = { ...card };
 
                 // Update standard_path if it exists
-                if (card.standard_path && (card.standard_path.includes('B:\\Cards') || card.standard_path.includes('B:\\Sets'))) {
+                if (card.standard_path && typeof card.standard_path === 'string' && (card.standard_path.includes('B:\\Cards') || card.standard_path.includes('B:\\Sets'))) {
                     updatedCard.standard_path = convertToCloudinaryURL(card.standard_path, set.set_name);
                     needsUpdate = true;
                 }
 
                 // Update image field if it exists
-                if (card.image && (card.image.includes('B:\\Cards') || card.image.includes('B:\\Sets'))) {
+                if (card.image && typeof card.image === 'string' && (card.image.includes('B:\\Cards') || card.image.includes('B:\\Sets'))) {
                     updatedCard.image = convertToCloudinaryURL(card.image, set.set_name);
                     needsUpdate = true;
                 }
 
                 // Update print_path if it exists
-                if (card.print_path && (card.print_path.includes('B:\\Cards') || card.print_path.includes('B:\\Sets'))) {
+                if (card.print_path && typeof card.print_path === 'string' && (card.print_path.includes('B:\\Cards') || card.print_path.includes('B:\\Sets'))) {
                     updatedCard.print_path = convertToCloudinaryURL(card.print_path, set.set_name);
                     needsUpdate = true;
                 }
