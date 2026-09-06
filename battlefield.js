@@ -1039,8 +1039,23 @@ document.addEventListener('DOMContentLoaded', () => {
     // Create game state
     const gameState = new GameState();
     
-    // Generate proper 60-card decks with correct ratios
-    gameState.player.deck = CardGenerator.generateDeck();
+    // Try to load pre-made deck from sessionStorage
+    const storedDeck = sessionStorage.getItem('selectedDeck');
+    if (storedDeck) {
+        try {
+            const deckData = JSON.parse(storedDeck);
+            console.log('Loading pre-made deck:', deckData.name);
+            gameState.player.deck = deckData.cards;
+        } catch (error) {
+            console.error('Error loading stored deck:', error);
+            gameState.player.deck = CardGenerator.generateDeck();
+        }
+    } else {
+        // Generate proper 60-card decks with correct ratios
+        gameState.player.deck = CardGenerator.generateDeck();
+    }
+    
+    // Generate opponent deck (AI or multiplayer)
     gameState.opponent.deck = CardGenerator.generateDeck();
     
     // Shuffle decks

@@ -10,34 +10,12 @@
     <div class="container">
         <h1>Deck Selection</h1>
         <form id="deck-selection-form">
-            <label for="card-set">Card Set:</label>
-            <select id="card-set" name="card-set" required>
-                <option value="">Loading sets...</option>
+            <label for="deck">Choose Your Deck:</label>
+            <select id="deck" name="deck" required>
+                <option value="">Loading decks...</option>
             </select>
 
-            <label for="deck-size">Deck Size (60-100):</label>
-            <input type="number" id="deck-size" name="deck-size" min="60" max="100" required>
-
-            <label for="vigor-type">Vigor Type:</label>
-            <select id="vigor-type" name="vigor-type" required>
-                <option value="">All Types</option>
-                <option value="Earth">Earth</option>
-                <option value="Fairy">Fairy</option>
-                <option value="Fungus">Fungus</option>
-                <option value="Greed">Greed</option>
-                <option value="Lava">Lava</option>
-                <option value="Lightning">Lightning</option>
-                <option value="Moon">Moon</option>
-                <option value="Ocean">Ocean</option>
-                <option value="Sorcery">Sorcery</option>
-                <option value="Spirit">Spirit</option>
-                <option value="Sun">Sun</option>
-                <option value="Tar">Tar</option>
-                <option value="Chaos">Chaos</option>
-                <option value="Purity">Purity</option>
-            </select>
-
-            <button type="submit">Submit</button>
+            <button type="submit">Start Game</button>
         </form>
     </div>
     <script src="deck-script.js"></script>
