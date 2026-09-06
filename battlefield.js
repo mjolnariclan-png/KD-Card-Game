@@ -959,8 +959,11 @@ class BattlefieldUI {
             }
             
             // Use correct field names from card data
-            const attack = card.ap || card.attack || 0;
-            const defense = card.dp || card.defense || 0;
+            // Handle string format like "AP 9" and extract numeric value
+            const apString = card.ap || card.attack || 0;
+            const dpString = card.dp || card.defense || 0;
+            const attack = typeof apString === 'string' ? parseInt(apString.replace(/\D/g, '')) || 0 : apString;
+            const defense = typeof dpString === 'string' ? parseInt(dpString.replace(/\D/g, '')) || 0 : dpString;
             const vigorType = card.vigor || card.vigor_type;
             const manaCost = card['Mana Card Cost'] || card.manaCost || 0;
             const color = card.color || this.getColorForVigor(vigorType);

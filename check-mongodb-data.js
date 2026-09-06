@@ -15,7 +15,7 @@ async function checkMongoDBData() {
         const db = client.db(DB_NAME);
         const setsCollection = db.collection('card_sets');
         
-        // Check First Light set (since user saw errors from it)
+        // Check First Light set
         const set = await setsCollection.findOne({ set_name: 'First Light' });
         
         if (set) {
@@ -23,21 +23,27 @@ async function checkMongoDBData() {
             
             // Get the cards collection for this set
             const cardsCollection = db.collection(`cards_${set.set_name.replace(/\s+/g, '_')}`);
-            const cards = await cardsCollection.find({}).limit(3).toArray();
             
-            console.log(`\nSample card data (first 3 cards) with all fields:`);
-            for (const card of cards) {
-                console.log(`\nCard: ${card.name}`);
-                console.log(`  type: ${card.type}`);
-                console.log(`  attack: ${card.attack}`);
-                console.log(`  defense: ${card.defense}`);
-                console.log(`  vigor_type: ${card.vigor_type}`);
-                console.log(`  standard_path: ${card.standard_path}`);
-                console.log(`  image: ${card.image}`);
-                console.log(`  print_path: ${card.print_path}`);
-                console.log(`  color: ${card.color}`);
-                console.log(`  All fields:`, Object.keys(card));
-            }
+            // Check both Vigor and Creature cards
+            const vigorCard = await cardsCollection.findOne({ type: 'Vigor' });
+            const creatureCard = await cardsCollection.findOne({ type: 'Creature' });
+            
+            console.log(`\nVigor Card: ${vigorCard.name}`);
+            console.log(`  type: ${vigorCard.type}`);
+            console.log(`  ap: ${vigorCard.ap}`);
+            console.log(`  dp: ${vigorCard.dp}`);
+            console.log(`  vigor: ${vigorCard.vigor}`);
+            console.log(`  standard_path: ${vigorCard.standard_path}`);
+            console.log(`  All fields:`, Object.keys(vigorCard));
+            
+            console.log(`\nCreature Card: ${creatureCard.name}`);
+            console.log(`  type: ${creatureCard.type}`);
+            console.log(`  ap: ${creatureCard.ap}`);
+            console.log(`  dp: ${creatureCard.dp}`);
+            console.log(`  vigor: ${creatureCard.vigor}`);
+            console.log(`  attacks: ${creatureCard.attacks ? creatureCard.attacks.length : 'none'}`);
+            console.log(`  standard_path: ${creatureCard.standard_path}`);
+            console.log(`  All fields:`, Object.keys(creatureCard));
         }
         
     } catch (error) {
