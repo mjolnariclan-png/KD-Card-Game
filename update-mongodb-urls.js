@@ -1,5 +1,6 @@
 const { MongoClient } = require('mongodb');
 const { v2: cloudinary } = require('cloudinary');
+const path = require('path');
 
 // MongoDB Connection
 const MONGODB_URI = 'mongodb+srv://mjolnariclan17:JuPiTeR2015!@tcg-game-db.ak26dwh.mongodb.net/?appName=tcg-game-db';
@@ -57,6 +58,22 @@ async function updateMongoDBUrls() {
 
                 // Update print_path if it exists and has local paths
                 if (card.print_path && typeof card.print_path === 'string' && (card.print_path.includes('B:\\Cards') || card.print_path.includes('B:\\Sets') || card.print_path.includes('F:\\zzz\\'))) {
+                    updatedCard.print_path = convertToCloudinaryURL(card.print_path, set.set_name);
+                    needsUpdate = true;
+                }
+                
+                // Also check for paths with single backslashes
+                if (card.standard_path && typeof card.standard_path === 'string' && (card.standard_path.includes('B:\Cards') || card.standard_path.includes('B:\Sets') || card.standard_path.includes('F:\zzz\Vigor'))) {
+                    updatedCard.standard_path = convertToCloudinaryURL(card.standard_path, set.set_name);
+                    needsUpdate = true;
+                }
+
+                if (card.image && typeof card.image === 'string' && (card.image.includes('B:\Cards') || card.image.includes('B:\Sets') || card.image.includes('F:\zzz\Vigor'))) {
+                    updatedCard.image = convertToCloudinaryURL(card.image, set.set_name);
+                    needsUpdate = true;
+                }
+
+                if (card.print_path && typeof card.print_path === 'string' && (card.print_path.includes('B:\Cards') || card.print_path.includes('B:\Sets') || card.print_path.includes('F:\zzz\Vigor'))) {
                     updatedCard.print_path = convertToCloudinaryURL(card.print_path, set.set_name);
                     needsUpdate = true;
                 }
