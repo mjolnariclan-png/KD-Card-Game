@@ -7,7 +7,7 @@ const app = express();
 const PORT = process.env.PORT || 3005;
 
 // MongoDB Connection
-const MONGODB_URI = process.env.MONGODB_URI || 'mongodb+srv://mjolnariclan17:JuPiTeR2015!@tcg-game-db.ak26dwh.mongodb.net/?appName=tcg-game-db';
+const MONGODB_URI = process.env.MONGODB_URI || 'mongodb+srv://mjolnariclan17:JuPiTeR2015!@tcg-game-db.ak26dwh.mongodb.net/?appName=tcg-game-db&retryWrites=true&w=majority&tls=true&tlsAllowInvalidCertificates=true&serverSelectionTimeoutMS=5000';
 const DB_NAME = 'tcg-game-db';
 
 // Cloudinary Configuration
@@ -31,13 +31,7 @@ let availableSets = [];
 // Connect to MongoDB
 async function connectToMongoDB() {
     try {
-        client = new MongoClient(MONGODB_URI, {
-            ssl: true,
-            tls: true,
-            tlsAllowInvalidCertificates: true,
-            serverSelectionTimeoutMS: 5000,
-            connectTimeoutMS: 10000
-        });
+        client = new MongoClient(MONGODB_URI);
         await client.connect();
         console.log('Connected to MongoDB Atlas');
         db = client.db(DB_NAME);
