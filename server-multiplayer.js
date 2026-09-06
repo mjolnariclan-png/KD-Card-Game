@@ -296,8 +296,9 @@ app.post('/api/play-card', (req, res) => {
         // Equipment needs to be attached to a creature - not allowed here
         return res.json({ success: false, error: 'Equipment must be attached using the equipment endpoint' });
     } else if (card.type === 'vigor') {
-        // Vigor cards are no longer played - vigor is accumulated automatically
-        return res.json({ success: false, error: 'Vigor is accumulated automatically (+1 per turn, max 20)' });
+        // Vigor cards are played to battlefield
+        player.battlefield.push(card);
+        console.log(`Vigor played. Total vigor on battlefield: ${player.battlefield.filter(c => c.type === 'vigor').length}`);
     } else if (card.type === 'rune') {
         // Equipment needs to be attached to a creature
         // Return error if no target specified
@@ -489,13 +490,11 @@ app.post('/api/advance-phase', (req, res) => {
         
         // Phase-specific actions
         if (game.phase === 'vigor') {
-            // Vigor Phase: Add 1 vigor per turn, max 20
+            // Vigor Phase: Reset vigor based on vigor cards on battlefield
             currentPlayer.vigorUsedThisTurn = 0;
-            if ((currentPlayer.totalVigor || 0) < 20) {
-                currentPlayer.totalVigor = (currentPlayer.totalVigor || 0) + 1;
-            }
-            currentPlayer.mana = currentPlayer.totalVigor;
-            console.log(`Vigor Phase: ${currentPlayer.name} now has ${currentPlayer.totalVigor} total vigor`);
+            const totalVigor = currentPlayer.battlefield.filter(c => c.type === 'vigor').length;
+            currentPlayer.mana = totalVigor;
+            console.log(`Vigor Phase: ${currentPlayer.name} has ${totalVigor} vigor from battlefield`);
         } else if (game.phase === 'draw') {
             // Draw Phase: Draw 1 card
             if (currentPlayer.deck.length > 0) {
@@ -662,14 +661,24 @@ app.post('/api/auto-play-vigor', (req, res) => {
 });
 
 function generateDeck(player) {
-    // Generate 60-card deck (without vigor cards since vigor is accumulated automatically)
+    // Generate deck based on exact rules:
+    // 1 Primordial (required)
+    // Up to 22 Vigor cards
+    // Up to 24 Creatures
+    // Up to 7 Accoutrements (Equipment)
+    // Up to 6 Runes
     const deck = [];
 
-    // 1 Primordial (cost 5)
+    // 1 Primordial (required)
     deck.push({ type: 'primordial', name: 'Primordial King', cost: 5, attack: 10, defense: 10, isPrimordial: true, canAttack: false });
 
-    // 32 Creatures (increased to reach 60 cards)
-    for (let i = 0; i < 32; i++) {
+    // 22 Vigor cards (maximum)
+    for (let i = 0; i < 22; i++) {
+        deck.push({ type: 'vigor', name: 'Vigor', cost: 0, attack: 0, defense: 0 });
+    }
+
+    // 24 Creatures (maximum)
+    for (let i = 0; i < 24; i++) {
         const attack = Math.floor(Math.random() * 5) + 1;
         const defense = Math.floor(Math.random() * 5) + 1;
         const cost = 1; // Low cost for testing
@@ -677,18 +686,18 @@ function generateDeck(player) {
         deck.push({ type: 'creature', name: `Creature ${i+1}`, cost: cost, attack: attack, defense: defense, hasHaste: hasHaste });
     }
 
-    // 12 Runes (increased to reach 60 cards)
-    for (let i = 0; i < 12; i++) {
-        const cost = Math.floor(Math.random() * 3) + 1;
-        deck.push({ type: 'rune', name: `Rune ${i+1}`, cost: cost, attack: 0, defense: 0 });
-    }
-
-    // 15 Equipment (increased to reach 60 cards)
-    for (let i = 0; i < 15; i++) {
+    // 7 Accoutrements/Equipment (maximum)
+    for (let i = 0; i < 7; i++) {
         const attack = Math.floor(Math.random() * 2);
         const defense = Math.floor(Math.random() * 2);
         const cost = 1;
         deck.push({ type: 'equipment', name: `Equipment ${i+1}`, cost: cost, attack: attack, defense: defense });
+    }
+
+    // 6 Runes (maximum)
+    for (let i = 0; i < 6; i++) {
+        const cost = Math.floor(Math.random() * 3) + 1;
+        deck.push({ type: 'rune', name: `Rune ${i+1}`, cost: cost, attack: 0, defense: 0 });
     }
     
     // Shuffle deck
