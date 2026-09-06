@@ -43,20 +43,20 @@ async function updateMongoDBUrls() {
                 let needsUpdate = false;
                 const updatedCard = { ...card };
 
-                // Update standard_path if it exists
-                if (card.standard_path && typeof card.standard_path === 'string' && (card.standard_path.includes('B:\\Cards') || card.standard_path.includes('B:\\Sets'))) {
+                // Update standard_path if it exists and has local paths
+                if (card.standard_path && typeof card.standard_path === 'string' && (card.standard_path.includes('B:\\Cards') || card.standard_path.includes('B:\\Sets') || card.standard_path.includes('F:\\zzz\\'))) {
                     updatedCard.standard_path = convertToCloudinaryURL(card.standard_path, set.set_name);
                     needsUpdate = true;
                 }
 
-                // Update image field if it exists
-                if (card.image && typeof card.image === 'string' && (card.image.includes('B:\\Cards') || card.image.includes('B:\\Sets'))) {
+                // Update image field if it exists and has local paths
+                if (card.image && typeof card.image === 'string' && (card.image.includes('B:\\Cards') || card.image.includes('B:\\Sets') || card.image.includes('F:\\zzz\\'))) {
                     updatedCard.image = convertToCloudinaryURL(card.image, set.set_name);
                     needsUpdate = true;
                 }
 
-                // Update print_path if it exists
-                if (card.print_path && typeof card.print_path === 'string' && (card.print_path.includes('B:\\Cards') || card.print_path.includes('B:\\Sets'))) {
+                // Update print_path if it exists and has local paths
+                if (card.print_path && typeof card.print_path === 'string' && (card.print_path.includes('B:\\Cards') || card.print_path.includes('B:\\Sets') || card.print_path.includes('F:\\zzz\\'))) {
                     updatedCard.print_path = convertToCloudinaryURL(card.print_path, set.set_name);
                     needsUpdate = true;
                 }
@@ -94,9 +94,21 @@ function convertToCloudinaryURL(localPath, setName) {
         return localPath;
     }
     
+    // Handle F:\zzz\Vigor paths by converting to B:\Sets format
+    if (localPath.includes('F:\\zzz\\Vigor')) {
+        // Extract vigor type from path like F:\zzz\Vigor\ChaosM\Chaos\Chaos4.png
+        const pathParts = localPath.split('\\');
+        const vigorType = pathParts[2]; // ChaosM, GreedM, etc.
+        const fileName = path.basename(localPath);
+        
+        // Generate Cloudinary URL based on vigor type
+        const cleanVigorType = vigorType.replace('M', ''); // ChaosM -> Chaos
+        const publicId = fileName.replace(/\.[^/.]+$/, '');
+        return cloudinary.url(`tcg-cards/${setName}/${cleanVigorType}/${publicId}`);
+    }
+    
     // Convert from B:\Cards\Chaos\Vigor\Chaos_Warpbinder.png
     // to Cloudinary URL with nested folders
-    const path = require('path');
     const relativePath = localPath.replace('B:\\Cards', `B:\\Sets\\${setName}`);
     const fileName = path.basename(relativePath);
     const folderStructure = path.dirname(relativePath).replace('B:\\Sets\\', '').replace(/\\/g, '/');

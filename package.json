@@ -8,6 +8,7 @@
     "update-manifests": "node upload-manifests.js",
     "update-images": "node upload-images.js",
     "update-urls": "node update-mongodb-urls.js",
+    "check-data": "node check-mongodb-data.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "keywords": [],
