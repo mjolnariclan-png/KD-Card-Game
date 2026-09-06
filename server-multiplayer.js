@@ -12,16 +12,16 @@ let lobbyPlayers = [];
 let cardManifests = {};
 let availableSets = [];
 
-// Load card manifests from B:\Cards
+// Load card manifests from B:\Sets
 function loadCardManifests() {
-    const cardsPath = 'B:\\Cards';
-    if (!fs.existsSync(cardsPath)) {
-        console.log('Cards directory not found at B:\\Cards');
+    const setsPath = 'B:\\Sets';
+    if (!fs.existsSync(setsPath)) {
+        console.log('Sets directory not found at B:\\Sets');
         return;
     }
 
-    const sets = fs.readdirSync(cardsPath).filter(dir => {
-        const dirPath = path.join(cardsPath, dir);
+    const sets = fs.readdirSync(setsPath).filter(dir => {
+        const dirPath = path.join(setsPath, dir);
         return fs.statSync(dirPath).isDirectory();
     });
 
@@ -29,7 +29,7 @@ function loadCardManifests() {
     console.log(`Found ${sets.length} card sets: ${sets.join(', ')}`);
 
     sets.forEach(setName => {
-        const manifestPath = path.join(cardsPath, setName, `${setName}_manifest.json`);
+        const manifestPath = path.join(setsPath, setName, `${setName}_manifest.json`);
         if (fs.existsSync(manifestPath)) {
             try {
                 const manifestData = JSON.parse(fs.readFileSync(manifestPath, 'utf8'));
@@ -62,8 +62,8 @@ app.use(express.json());
 // Serve static files from test game directory
 app.use(express.static(__dirname));
 
-// Serve card images from B:\Cards location
-app.use('/cards', express.static('B:\\Cards'));
+// Serve card images from B:\Sets location
+app.use('/cards', express.static('B:\\Sets'));
 
 // Route for main page
 app.get('/', (req, res) => {
@@ -792,12 +792,20 @@ function generateDeck(player, setName = 'Ash Cycle', vigorType = null) {
     const manifest = cardManifests[setName];
     const cards = manifest.cards;
 
+    // Helper function to convert B:\Cards paths to B:\Sets paths
+    function convertImagePath(originalPath, setName) {
+        if (!originalPath) return null;
+        // Convert from B:\Cards\Chaos\Vigor\Chaos_Warpbinder.png
+        // to B:\Sets\Ash Cycle\Chaos\Vigor\Chaos_Warpbinder.png
+        return originalPath.replace('B:\\Cards', `B:\\Sets\\${setName}`);
+    }
+
     // Helper function to convert manifest card to game card
     const convertCard = (manifestCard) => {
         const baseCard = {
             name: manifestCard.name,
             type: manifestCard.type.toLowerCase(),
-            image: manifestCard.standard_path || manifestCard.image,
+            image: convertImagePath(manifestCard.standard_path || manifestCard.image, setName),
             cost: parseInt(manifestCard['Mana Card Cost']) || 0,
             vigor: manifestCard.vigor || manifestCard.vigor_type || null,
             rarity: manifestCard.rarity || null
