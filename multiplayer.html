@@ -873,6 +873,7 @@
         <!-- Side Buttons -->
         <div class="side-buttons left-buttons" id="left-buttons">
             <button id="draw-card-btn-side" class="side-btn">Draw Card (D)</button>
+            <button id="auto-play-vigor-btn-side" class="side-btn">Auto-Play Vigor</button>
         </div>
         <div class="side-buttons right-buttons" id="right-buttons">
             <button id="end-phase-btn-side" class="side-btn">End Phase (Space)</button>
@@ -938,6 +939,7 @@
         const clickOutsideDetector = document.getElementById('click-outside-detector');
 
         const drawCardBtnSide = document.getElementById('draw-card-btn-side');
+        const autoPlayVigorBtnSide = document.getElementById('auto-play-vigor-btn-side');
         const endPhaseBtnSide = document.getElementById('end-phase-btn-side');
         const leaveGameX = document.getElementById('leave-game-x');
         const leftButtons = document.getElementById('left-buttons');
@@ -1048,10 +1050,13 @@
         // Challenge a player
         async function challengePlayer(opponentId) {
             try {
+                const cardSet = sessionStorage.getItem('cardSet') || 'Ash Cycle';
+                const vigorType = sessionStorage.getItem('vigorType') || null;
+
                 const response = await fetch(`${API_BASE}/challenge-player`, {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ playerId, opponentId })
+                    body: JSON.stringify({ playerId, opponentId, cardSet, vigorType })
                 });
                 
                 const data = await response.json();
@@ -1136,14 +1141,14 @@
             // Update info
             myName.textContent = myPlayer.name || 'Player';
             myScallous.textContent = `Scallous: ${myPlayer.life}`;
-            const totalVigor = myPlayer.totalVigor || 0;
+            const totalVigor = myPlayer.battlefield.filter(c => c.type === 'vigor').length;
             const usedVigor = myPlayer.vigorUsedThisTurn || 0;
             const availableVigor = totalVigor - usedVigor;
             myVigor.textContent = `Vigor: ${availableVigor}/${totalVigor}`;
 
             opponentName.textContent = opponentPlayer.name || 'Opponent';
             opponentScallous.textContent = `Scallous: ${opponentPlayer.life}`;
-            const opponentTotalVigor = opponentPlayer.totalVigor || 0;
+            const opponentTotalVigor = opponentPlayer.battlefield.filter(c => c.type === 'vigor').length;
             const opponentUsedVigor = opponentPlayer.vigorUsedThisTurn || 0;
             const opponentAvailableVigor = opponentTotalVigor - opponentUsedVigor;
             opponentVigor.textContent = `Vigor: ${opponentAvailableVigor}/${opponentTotalVigor}`;
@@ -1154,6 +1159,7 @@
             // Update button states (only show on player's turn)
             const isMyTurn = gameState.currentTurn === playerIndex;
             drawCardBtnSide.disabled = !isMyTurn || gameState.phase !== 'draw';
+            autoPlayVigorBtnSide.disabled = !isMyTurn || gameState.phase !== 'vigor';
             endPhaseBtnSide.disabled = !isMyTurn;
             
             leftButtons.style.display = isMyTurn ? 'flex' : 'none';
@@ -1171,11 +1177,11 @@
                 stopPhaseTimer();
             }
             
-            // Render cards
+            // Render cards (hide vigor on battlefield, only show in info)
             renderCards(myPlayer.hand, handOverlayCards, true, false);
-            renderCards(myPlayer.battlefield, playerBattlefield, false, false);
+            renderCards(myPlayer.battlefield.filter(c => c.type !== 'vigor'), playerBattlefield, false, false);
             // Opponent cards on battlefield are face-up (NOT face-down)
-            renderCards(opponentPlayer.battlefield, opponentBattlefield, false, false);
+            renderCards(opponentPlayer.battlefield.filter(c => c.type !== 'vigor'), opponentBattlefield, false, false);
             
             // Make opponent cards clickable during attack phase
             if (gameState.currentTurn === playerIndex && gameState.phase === 'attack') {
@@ -1184,8 +1190,10 @@
                     card.addEventListener('click', (e) => {
                         e.stopPropagation();
                         const opponent = gameState.players[1 - playerIndex];
-                        const cardData = opponent.battlefield[index];
-                        handleAttackTarget(index, false);
+                        const opponentBattlefield = opponent.battlefield.filter(c => c.type !== 'vigor');
+                        const cardData = opponentBattlefield[index];
+                        const fullTargetIndex = opponent.battlefield.indexOf(cardData);
+                        handleAttackTarget(fullTargetIndex, false);
                     });
                 });
             }
@@ -1409,7 +1417,16 @@
                 
                 let cardContent = '';
 
-                if (card.type === 'primordial') {
+                if (card.type === 'vigor') {
+                    cardContent = `
+                        <div class="card-cost">0</div>
+                        <div class="card-name">${card.name}</div>
+                        <div class="card-image vigor-icon">
+                            <span style="font-size: 3em;">💎</span>
+                        </div>
+                        <div class="card-description">+1 Vigor per round</div>
+                    `;
+                } else if (card.type === 'primordial') {
                     cardContent = `
                         <div class="card-cost">${card.cost}</div>
                         <div class="card-name primordial-name">${card.name}</div>
@@ -1475,6 +1492,9 @@
             if (card.type === 'rune') {
                 // Runes don't need placement - play immediately
                 await playCard(index);
+            } else if (card.type === 'vigor') {
+                // Vigor cards are auto-played
+                await playCard(index);
             } else if (card.type === 'equipment') {
                 // Equipment needs to be attached to a creature
                 showEquipmentAttachmentOptions(index, card);
@@ -1485,7 +1505,7 @@
         }
         
         function showEquipmentAttachmentOptions(equipmentIndex, equipment) {
-            const myBattlefield = gameState.players[playerIndex].battlefield;
+            const myBattlefield = gameState.players[playerIndex].battlefield.filter(c => c.type !== 'vigor');
             const creatures = myBattlefield.filter(c => c.type === 'creature' || c.type === 'primordial');
             
             if (creatures.length === 0) {
@@ -1657,6 +1677,25 @@
                 } catch (error) {
                     console.error('Error advancing phase:', error);
                 }
+            }
+        });
+
+        // Auto-play vigor
+        autoPlayVigorBtnSide.addEventListener('click', async () => {
+            try {
+                const response = await fetch(`${API_BASE}/auto-play-vigor`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ gameId, playerId })
+                });
+
+                const data = await response.json();
+                if (data.success) {
+                    gameState = data.gameState;
+                    render();
+                }
+            } catch (error) {
+                console.error('Error auto-playing vigor:', error);
             }
         });
 

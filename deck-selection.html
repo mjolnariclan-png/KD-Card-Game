@@ -10,11 +10,17 @@
     <div class="container">
         <h1>Deck Selection</h1>
         <form id="deck-selection-form">
+            <label for="card-set">Card Set:</label>
+            <select id="card-set" name="card-set" required>
+                <option value="">Loading sets...</option>
+            </select>
+
             <label for="deck-size">Deck Size (60-100):</label>
             <input type="number" id="deck-size" name="deck-size" min="60" max="100" required>
-            
+
             <label for="vigor-type">Vigor Type:</label>
             <select id="vigor-type" name="vigor-type" required>
+                <option value="">All Types</option>
                 <option value="Earth">Earth</option>
                 <option value="Fairy">Fairy</option>
                 <option value="Fungus">Fungus</option>

@@ -1,11 +1,49 @@
 const express = require('express');
 const path = require('path');
+const fs = require('fs');
 const app = express();
 const PORT = process.env.PORT || 3005;
 
 // Game state management
 let games = {};
 let lobbyPlayers = [];
+
+// Card manifests cache
+let cardManifests = {};
+let availableSets = [];
+
+// Load card manifests from B:\Cards
+function loadCardManifests() {
+    const cardsPath = 'B:\\Cards';
+    if (!fs.existsSync(cardsPath)) {
+        console.log('Cards directory not found at B:\\Cards');
+        return;
+    }
+
+    const sets = fs.readdirSync(cardsPath).filter(dir => {
+        const dirPath = path.join(cardsPath, dir);
+        return fs.statSync(dirPath).isDirectory();
+    });
+
+    availableSets = sets;
+    console.log(`Found ${sets.length} card sets: ${sets.join(', ')}`);
+
+    sets.forEach(setName => {
+        const manifestPath = path.join(cardsPath, setName, `${setName}_manifest.json`);
+        if (fs.existsSync(manifestPath)) {
+            try {
+                const manifestData = JSON.parse(fs.readFileSync(manifestPath, 'utf8'));
+                cardManifests[setName] = manifestData;
+                console.log(`Loaded manifest for ${setName}: ${manifestData.cards.length} cards`);
+            } catch (error) {
+                console.error(`Error loading manifest for ${setName}:`, error.message);
+            }
+        }
+    });
+}
+
+// Load manifests on startup
+loadCardManifests();
 
 // CORS middleware to allow cross-origin requests
 app.use((req, res, next) => {
@@ -24,12 +62,58 @@ app.use(express.json());
 // Serve static files from test game directory
 app.use(express.static(__dirname));
 
-// Serve card images
-app.use('/cards', express.static(path.join(__dirname, '..', 'All Cards', 'Fehu White Deck')));
+// Serve card images from B:\Cards location
+app.use('/cards', express.static('B:\\Cards'));
 
 // Route for main page
 app.get('/', (req, res) => {
     res.sendFile(path.join(__dirname, 'index.html'));
+});
+
+// Get available card sets
+app.get('/api/sets', (req, res) => {
+    res.json({
+        success: true,
+        sets: availableSets.map(setName => ({
+            name: setName,
+            manifest: cardManifests[setName] ? {
+                set_name: cardManifests[setName].set_name,
+                base_total: cardManifests[setName].base_total,
+                type_distribution: cardManifests[setName].type_distribution
+            } : null
+        }))
+    });
+});
+
+// Get cards from a specific set
+app.get('/api/cards/:setName', (req, res) => {
+    const { setName } = req.params;
+    const { type, vigorType } = req.query;
+
+    if (!cardManifests[setName]) {
+        return res.json({ success: false, error: 'Set not found' });
+    }
+
+    let cards = cardManifests[setName].cards;
+
+    // Filter by type if specified
+    if (type) {
+        cards = cards.filter(card => card.type.toLowerCase() === type.toLowerCase());
+    }
+
+    // Filter by vigor type if specified
+    if (vigorType) {
+        cards = cards.filter(card => {
+            const cardVigor = card.vigor || card.vigor_type;
+            return cardVigor && cardVigor.toLowerCase() === vigorType.toLowerCase();
+        });
+    }
+
+    res.json({
+        success: true,
+        cards: cards,
+        total: cards.length
+    });
 });
 
 // Join lobby endpoint
@@ -105,44 +189,48 @@ app.get('/api/lobby-players', (req, res) => {
 
 // Challenge player endpoint
 app.post('/api/challenge-player', (req, res) => {
-    const { playerId, opponentId } = req.body;
-    
+    const { playerId, opponentId, cardSet, vigorType } = req.body;
+
     console.log(`Player ${playerId} challenging ${opponentId}`);
-    
+    console.log(`Card set: ${cardSet}, Vigor type: ${vigorType}`);
+
     const challenger = lobbyPlayers.find(p => p.id === playerId);
     const opponent = lobbyPlayers.find(p => p.id === opponentId);
-    
+
     if (!challenger || !opponent) {
         return res.json({ success: false, error: 'Player not found in lobby' });
     }
-    
+
     // Create game
     const gameId = `game_${Date.now()}`;
-    
+
     // Coin flip to determine who goes first
     const coinFlip = Math.random() < 0.5;
     const firstPlayerIndex = coinFlip ? 0 : 1;
-    
+
     // Determine which player is which index
     const challengerIndex = challenger.id === playerId ? 0 : 1;
     const opponentIndex = 1 - challengerIndex;
-    
+
     games[gameId] = {
         id: gameId,
         players: [
-            { id: challenger.id, name: challenger.name, life: 30, mana: 0, hand: [], battlefield: [], deck: [], isReady: false, vigorUsedThisTurn: 0, totalVigor: 0 },
-            { id: opponent.id, name: opponent.name, life: 30, mana: 0, hand: [], battlefield: [], deck: [], isReady: false, vigorUsedThisTurn: 0, totalVigor: 0 }
+            { id: challenger.id, name: challenger.name, life: 30, mana: 0, hand: [], battlefield: [], deck: [], isReady: false, vigorUsedThisTurn: 0 },
+            { id: opponent.id, name: opponent.name, life: 30, mana: 0, hand: [], battlefield: [], deck: [], isReady: false, vigorUsedThisTurn: 0 }
         ],
         currentTurn: firstPlayerIndex,
         phase: 'vigor',
         lastUpdate: Date.now(),
         coinFlipResult: coinFlip,
         challengerId: playerId,
-        opponentId: opponentId
+        opponentId: opponentId,
+        cardSet: cardSet || 'Ash Cycle',
+        vigorType: vigorType || null
     };
-    
-    // Generate decks for both players
-    generateDeck(games[gameId].players[0]);
+
+    // Generate decks for both players using the selected card set and vigor type
+    generateDeck(games[gameId].players[0], cardSet || 'Ash Cycle', vigorType || null);
+    generateDeck(games[gameId].players[1], cardSet || 'Ash Cycle', vigorType || null);
     generateDeck(games[gameId].players[1]);
     
     // Mark players as being in this game (so they can be found later)
@@ -260,12 +348,12 @@ app.post('/api/play-card', (req, res) => {
     }
     
     // Calculate available vigor (total vigor - vigor used this turn)
-    const totalVigor = player.totalVigor || 0;
+    const totalVigor = player.battlefield.filter(c => c.type === 'vigor').length;
     const availableVigor = totalVigor - (player.vigorUsedThisTurn || 0);
-    
+
     console.log(`Player ${player.name} trying to play card: ${card.name}`);
     console.log(`Card cost: ${card.cost}, Total vigor: ${totalVigor}, Available: ${availableVigor}`);
-    
+
     if (card.cost > availableVigor) {
         console.log(`Not enough vigor. Need ${card.cost}, have ${availableVigor}`);
         return res.json({ success: false, error: `Not enough vigor. Need ${card.cost}, have ${availableVigor}` });
@@ -437,11 +525,16 @@ app.post('/api/end-turn', (req, res) => {
     // Reset vigor used this turn
     currentPlayer.vigorUsedThisTurn = 0;
 
-    // Add 1 vigor per turn, max 20
-    if ((currentPlayer.totalVigor || 0) < 20) {
-        currentPlayer.totalVigor = (currentPlayer.totalVigor || 0) + 1;
-    }
-    currentPlayer.mana = currentPlayer.totalVigor;
+    // Auto-play vigor from hand (stack up vigor)
+    const vigorCards = currentPlayer.hand.filter(c => c.type === 'vigor');
+    vigorCards.forEach(card => {
+        const index = currentPlayer.hand.indexOf(card);
+        currentPlayer.hand.splice(index, 1);
+        currentPlayer.battlefield.push(card);
+    });
+
+    // Calculate vigor (stacks up - count all vigor on battlefield)
+    currentPlayer.mana = currentPlayer.battlefield.filter(c => c.type === 'vigor').length;
 
     // Enable creatures and primordials to attack (they've been on battlefield for a full turn)
     currentPlayer.battlefield.forEach(card => {
@@ -492,6 +585,13 @@ app.post('/api/advance-phase', (req, res) => {
         if (game.phase === 'vigor') {
             // Vigor Phase: Reset vigor based on vigor cards on battlefield
             currentPlayer.vigorUsedThisTurn = 0;
+            // Auto-play vigor from hand
+            const vigorCards = currentPlayer.hand.filter(c => c.type === 'vigor');
+            vigorCards.forEach(card => {
+                const index = currentPlayer.hand.indexOf(card);
+                currentPlayer.hand.splice(index, 1);
+                currentPlayer.battlefield.push(card);
+            });
             const totalVigor = currentPlayer.battlefield.filter(c => c.type === 'vigor').length;
             currentPlayer.mana = totalVigor;
             console.log(`Vigor Phase: ${currentPlayer.name} has ${totalVigor} vigor from battlefield`);
@@ -501,6 +601,9 @@ app.post('/api/advance-phase', (req, res) => {
                 const card = currentPlayer.deck.pop();
                 if (card.type === 'primordial') {
                     card.canAttack = true; // Can attack immediately
+                    currentPlayer.battlefield.push(card);
+                } else if (card.type === 'vigor') {
+                    // Vigor cards go directly to battlefield
                     currentPlayer.battlefield.push(card);
                 } else {
                     currentPlayer.hand.push(card);
@@ -525,11 +628,14 @@ app.post('/api/advance-phase', (req, res) => {
         // Reset vigor used this turn for next player
         nextPlayer.vigorUsedThisTurn = 0;
 
-        // Add 1 vigor per turn, max 20
-        if ((nextPlayer.totalVigor || 0) < 20) {
-            nextPlayer.totalVigor = (nextPlayer.totalVigor || 0) + 1;
-        }
-        nextPlayer.mana = nextPlayer.totalVigor;
+        // Auto-play vigor from hand for next player
+        const vigorCards = nextPlayer.hand.filter(c => c.type === 'vigor');
+        vigorCards.forEach(card => {
+            const index = nextPlayer.hand.indexOf(card);
+            nextPlayer.hand.splice(index, 1);
+            nextPlayer.battlefield.push(card);
+        });
+        nextPlayer.mana = nextPlayer.battlefield.filter(c => c.type === 'vigor').length;
     }
     
     game.lastUpdate = Date.now();
@@ -554,10 +660,13 @@ app.post('/api/draw-card', (req, res) => {
         const card = player.deck.pop();
         if (card.type === 'primordial') {
             player.battlefield.push(card);
+        } else if (card.type === 'vigor') {
+            // Vigor cards go directly to battlefield
+            player.battlefield.push(card);
         } else {
             player.hand.push(card);
         }
-        
+
         game.lastUpdate = Date.now();
         res.json({ success: true, gameState: game, drawnCard: card });
     } else {
@@ -615,7 +724,7 @@ app.post('/api/attach-equipment', (req, res) => {
     }
     
     // Check if player has enough vigor
-    const totalVigor = player.totalVigor || 0;
+    const totalVigor = player.battlefield.filter(c => c.type === 'vigor').length;
     const availableVigor = totalVigor - (player.vigorUsedThisTurn || 0);
 
     if (equipment.cost > availableVigor) {
@@ -640,7 +749,7 @@ app.post('/api/attach-equipment', (req, res) => {
     res.json({ success: true, gameState: game });
 });
 
-// Auto-play vigor endpoint (no longer needed - vigor is accumulated automatically)
+// Auto-play vigor endpoint
 app.post('/api/auto-play-vigor', (req, res) => {
     const { gameId, playerId } = req.body;
     const game = games[gameId];
@@ -654,19 +763,198 @@ app.post('/api/auto-play-vigor', (req, res) => {
         return res.json({ success: false, error: 'Player not found' });
     }
 
-    // Vigor is now accumulated automatically - this endpoint is deprecated
-    // Just return current state
+    const vigorCards = player.hand.filter(c => c.type === 'vigor');
+    vigorCards.forEach(card => {
+        const index = player.hand.indexOf(card);
+        player.hand.splice(index, 1);
+        player.battlefield.push(card);
+    });
+    player.mana = player.battlefield.filter(c => c.type === 'vigor').length;
+
     game.lastUpdate = Date.now();
-    res.json({ success: true, gameState: game, message: 'Vigor is accumulated automatically (+1 per turn, max 20)' });
+    res.json({ success: true, gameState: game });
 });
 
-function generateDeck(player) {
-    // Generate deck based on exact rules:
+function generateDeck(player, setName = 'Ash Cycle', vigorType = null) {
+    // Generate deck based on exact rules using manifest data:
     // 1 Primordial (required)
     // Up to 22 Vigor cards
     // Up to 24 Creatures
     // Up to 7 Accoutrements (Equipment)
     // Up to 6 Runes
+    const deck = [];
+
+    if (!cardManifests[setName]) {
+        console.log(`Set ${setName} not found, using fallback generation`);
+        return generateFallbackDeck(player);
+    }
+
+    const manifest = cardManifests[setName];
+    const cards = manifest.cards;
+
+    // Helper function to convert manifest card to game card
+    const convertCard = (manifestCard) => {
+        const baseCard = {
+            name: manifestCard.name,
+            type: manifestCard.type.toLowerCase(),
+            image: manifestCard.standard_path || manifestCard.image,
+            cost: parseInt(manifestCard['Mana Card Cost']) || 0,
+            vigor: manifestCard.vigor || manifestCard.vigor_type || null,
+            rarity: manifestCard.rarity || null
+        };
+
+        // Type-specific conversions
+        if (baseCard.type === 'vigor') {
+            baseCard.attack = 0;
+            baseCard.defense = 0;
+        } else if (baseCard.type === 'creature' || baseCard.type === 'primordial') {
+            baseCard.attack = parseInt(manifestCard.ap?.replace('AP ', '')) || 1;
+            baseCard.defense = parseInt(manifestCard.dp?.replace('DP ', '')) || 1;
+            baseCard.className = manifestCard.className || '';
+            baseCard.attacks = manifestCard.attacks || [];
+            baseCard.strength = manifestCard.strength?.Vigor || null;
+            baseCard.weakness = manifestCard.weakness?.Vigor || null;
+            baseCard.hasHaste = false; // Will be set randomly
+            baseCard.canAttack = false; // Summoning sickness
+            if (baseCard.type === 'primordial') {
+                baseCard.isPrimordial = true;
+            }
+        } else if (baseCard.type === 'accoutrements' || baseCard.type === 'equipment') {
+            baseCard.attack = 0; // Will be set based on equipment stats
+            baseCard.defense = 0; // Will be set based on equipment stats
+            baseCard.type = 'equipment'; // Normalize to equipment
+        } else if (baseCard.type === 'rune') {
+            baseCard.attack = 0;
+            baseCard.defense = 0;
+        }
+
+        return baseCard;
+    };
+
+    // Filter cards by type and vigor type
+    const filterCards = (type, vigorFilter = null) => {
+        return cards.filter(card => {
+            if (card.type.toLowerCase() !== type.toLowerCase()) return false;
+            if (vigorFilter) {
+                const cardVigor = card.vigor || card.vigor_type;
+                if (!cardVigor || cardVigor.toLowerCase() !== vigorFilter.toLowerCase()) return false;
+            }
+            return true;
+        });
+    };
+
+    // Get cards for each type
+    let vigorCards = filterCards('vigor', vigorType);
+    let creatureCards = filterCards('creature', vigorType);
+    let primordialCards = filterCards('primordial', vigorType);
+    let equipmentCards = filterCards('accoutrements', vigorType).concat(filterCards('equipment', vigorType));
+    let runeCards = filterCards('rune', vigorType);
+
+    // If not enough cards with vigor type, get all cards of that type
+    if (vigorType) {
+        if (vigorCards.length === 0) vigorCards = filterCards('vigor');
+        if (creatureCards.length === 0) creatureCards = filterCards('creature');
+        if (primordialCards.length === 0) primordialCards = filterCards('primordial');
+        if (equipmentCards.length === 0) equipmentCards = filterCards('accoutrements').concat(filterCards('equipment'));
+        if (runeCards.length === 0) runeCards = filterCards('rune');
+    }
+
+    // Shuffle and select cards
+    const shuffleAndSelect = (cardArray, count) => {
+        const shuffled = [...cardArray].sort(() => Math.random() - 0.5);
+        return shuffled.slice(0, Math.min(count, shuffled.length));
+    };
+
+    // 1 Primordial (required)
+    const selectedPrimordials = shuffleAndSelect(primordialCards, 1);
+    if (selectedPrimordials.length > 0) {
+        const primordial = convertCard(selectedPrimordials[0]);
+        primordial.canAttack = false; // Summoning sickness
+        deck.push(primordial);
+    } else {
+        // Fallback if no primordials available
+        deck.push({ type: 'primordial', name: 'Primordial King', cost: 5, attack: 10, defense: 10, isPrimordial: true, canAttack: false });
+    }
+
+    // 22 Vigor cards (maximum)
+    const selectedVigor = shuffleAndSelect(vigorCards, 22);
+    selectedVigor.forEach(card => deck.push(convertCard(card)));
+
+    // Fill remaining vigor slots if needed
+    while (deck.filter(c => c.type === 'vigor').length < 22) {
+        deck.push({ type: 'vigor', name: 'Vigor', cost: 0, attack: 0, defense: 0, vigor: vigorType });
+    }
+
+    // 24 Creatures (maximum)
+    const selectedCreatures = shuffleAndSelect(creatureCards, 24);
+    selectedCreatures.forEach(card => {
+        const creature = convertCard(card);
+        creature.hasHaste = Math.random() < 0.2; // 20% chance of haste
+        deck.push(creature);
+    });
+
+    // Fill remaining creature slots if needed
+    while (deck.filter(c => c.type === 'creature').length < 24) {
+        const attack = Math.floor(Math.random() * 5) + 1;
+        const defense = Math.floor(Math.random() * 5) + 1;
+        deck.push({
+            type: 'creature',
+            name: `Creature ${deck.filter(c => c.type === 'creature').length + 1}`,
+            cost: 1,
+            attack: attack,
+            defense: defense,
+            hasHaste: Math.random() < 0.2,
+            vigor: vigorType
+        });
+    }
+
+    // 7 Accoutrements/Equipment (maximum)
+    const selectedEquipment = shuffleAndSelect(equipmentCards, 7);
+    selectedEquipment.forEach(card => {
+        const equipment = convertCard(card);
+        // Set random equipment stats
+        equipment.attack = Math.floor(Math.random() * 2);
+        equipment.defense = Math.floor(Math.random() * 2);
+        deck.push(equipment);
+    });
+
+    // Fill remaining equipment slots if needed
+    while (deck.filter(c => c.type === 'equipment').length < 7) {
+        deck.push({
+            type: 'equipment',
+            name: `Equipment ${deck.filter(c => c.type === 'equipment').length + 1}`,
+            cost: 1,
+            attack: Math.floor(Math.random() * 2),
+            defense: Math.floor(Math.random() * 2),
+            vigor: vigorType
+        });
+    }
+
+    // 6 Runes (maximum)
+    const selectedRunes = shuffleAndSelect(runeCards, 6);
+    selectedRunes.forEach(card => deck.push(convertCard(card)));
+
+    // Fill remaining rune slots if needed
+    while (deck.filter(c => c.type === 'rune').length < 6) {
+        deck.push({
+            type: 'rune',
+            name: `Rune ${deck.filter(c => c.type === 'rune').length + 1}`,
+            cost: Math.floor(Math.random() * 3) + 1,
+            attack: 0,
+            defense: 0,
+            vigor: vigorType
+        });
+    }
+
+    // Shuffle the final deck
+    deck.sort(() => Math.random() - 0.5);
+
+    console.log(`Generated deck for ${setName} with ${vigorType || 'mixed'} vigor: ${deck.length} cards`);
+    return deck;
+}
+
+function generateFallbackDeck(player) {
+    // Fallback deck generation if manifests aren't available
     const deck = [];
 
     // 1 Primordial (required)
@@ -681,8 +969,8 @@ function generateDeck(player) {
     for (let i = 0; i < 24; i++) {
         const attack = Math.floor(Math.random() * 5) + 1;
         const defense = Math.floor(Math.random() * 5) + 1;
-        const cost = 1; // Low cost for testing
-        const hasHaste = Math.random() < 0.2; // 20% chance of haste
+        const cost = 1;
+        const hasHaste = Math.random() < 0.2;
         deck.push({ type: 'creature', name: `Creature ${i+1}`, cost: cost, attack: attack, defense: defense, hasHaste: hasHaste });
     }
 
@@ -699,6 +987,9 @@ function generateDeck(player) {
         const cost = Math.floor(Math.random() * 3) + 1;
         deck.push({ type: 'rune', name: `Rune ${i+1}`, cost: cost, attack: 0, defense: 0 });
     }
+
+    deck.sort(() => Math.random() - 0.5);
+    return deck;
     
     // Shuffle deck
     deck.sort(() => Math.random() - 0.5);
