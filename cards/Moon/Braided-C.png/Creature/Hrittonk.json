@@ -1,0 +1,33 @@
+{
+    "name": "Hrittonk",
+    "className": "Dryad",
+    "classImage": "E:\\zzz\\Master Photo List\\Dryad\\dryad2.png",
+    "attacks": [
+        {
+            "name": "Lethal Venom Barrage",
+            "description": "Silences target 4 rounds",
+            "manaCost": "2"
+        },
+        {
+            "name": "Ravenous Thunder",
+            "description": "Attacks all 3 damage",
+            "manaCost": "12"
+        }
+    ],
+    "Mana Card Cost": "5",
+    "ap": "AP 2",
+    "dp": "DP 1",
+    "strength": {
+        "Vigor": "Earth",
+        "image": "SMana/Earth.png"
+    },
+    "weakness": {
+        "Vigor": "Sun",
+        "image": "WMana/Sun.png"
+    },
+    "deckManaImage": "Mana/Moon.png",
+    "rarityImage": "E:\\zzz\\Rarity\\Braided-C.png",
+    "backgroundImage": "E:\\zzz\\background.png",
+    "Card Location": "E:\\zzz\\Test Game\\images\\Moon\\Braided-C.png\\Creature\\Hrittonk.png",
+    "Json Location": "E:\\zzz\\Test Game\\cards\\Moon\\Braided-C.png\\Creature\\Hrittonk.json"
+}

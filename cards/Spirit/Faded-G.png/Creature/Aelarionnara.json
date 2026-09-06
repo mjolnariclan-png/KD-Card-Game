@@ -1,0 +1,33 @@
+{
+    "name": "Aelarionnara",
+    "className": "Bard",
+    "classImage": "E:\\zzz\\Master Photo List\\Bard\\bard7.png",
+    "attacks": [
+        {
+            "name": "Celestial Catastrophe",
+            "description": "Heals caster double successful attack",
+            "manaCost": "10"
+        },
+        {
+            "name": "Twilight Eclipse",
+            "description": "Turns opponent harmless 3 turns",
+            "manaCost": "1"
+        }
+    ],
+    "Mana Card Cost": "4",
+    "ap": "AP 4",
+    "dp": "DP 8",
+    "strength": {
+        "Vigor": "Sun",
+        "image": "SMana/Sun.png"
+    },
+    "weakness": {
+        "Vigor": "Earth",
+        "image": "WMana/Earth.png"
+    },
+    "deckManaImage": "Mana/Spirit.png",
+    "rarityImage": "E:\\zzz\\Rarity\\Faded-G.png",
+    "backgroundImage": "E:\\zzz\\background.png",
+    "Card Location": "E:\\zzz\\Test Game\\images\\Spirit\\Faded-G.png\\Creature\\Aelarionnara.png",
+    "Json Location": "E:\\zzz\\Test Game\\cards\\Spirit\\Faded-G.png\\Creature\\Aelarionnara.json"
+}

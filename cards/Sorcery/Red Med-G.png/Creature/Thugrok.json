@@ -1,0 +1,33 @@
+{
+    "name": "Thugrok",
+    "className": "Lord",
+    "classImage": "E:\\zzz\\Master Photo List\\Lord\\Lord2.png",
+    "attacks": [
+        {
+            "name": "Vampire Strike",
+            "description": "Attacks opponent 2 damage",
+            "manaCost": "4"
+        },
+        {
+            "name": "Raging Blizzard",
+            "description": "No attacks 5 turns",
+            "manaCost": "10"
+        }
+    ],
+    "Mana Card Cost": "1",
+    "ap": "AP 4",
+    "dp": "DP 12",
+    "strength": {
+        "Vigor": "Sun",
+        "image": "SMana/Sun.png"
+    },
+    "weakness": {
+        "Vigor": "Earth",
+        "image": "WMana/Earth.png"
+    },
+    "deckManaImage": "Mana/Sorcery.png",
+    "rarityImage": "E:\\zzz\\Rarity\\Red Med-G.png",
+    "backgroundImage": "E:\\zzz\\background.png",
+    "Card Location": "E:\\zzz\\Test Game\\images\\Sorcery\\Red Med-G.png\\Creature\\Thugrok.png",
+    "Json Location": "E:\\zzz\\Test Game\\cards\\Sorcery\\Red Med-G.png\\Creature\\Thugrok.json"
+}

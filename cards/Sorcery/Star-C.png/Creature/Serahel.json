@@ -1,0 +1,33 @@
+{
+    "name": "Serahel",
+    "className": "Dryad",
+    "classImage": "E:\\zzz\\Master Photo List\\Dryad\\dryad1.png",
+    "attacks": [
+        {
+            "name": "Flameburst",
+            "description": "Attacks opponent 2 damage",
+            "manaCost": "10"
+        },
+        {
+            "name": "Swift Strike",
+            "description": "Attacks opponent 2 damage",
+            "manaCost": "3"
+        }
+    ],
+    "Mana Card Cost": "1",
+    "ap": "AP 9",
+    "dp": "DP 2",
+    "strength": {
+        "Vigor": "Lava",
+        "image": "SMana/Lava.png"
+    },
+    "weakness": {
+        "Vigor": "Greed",
+        "image": "WMana/Greed.png"
+    },
+    "deckManaImage": "Mana/Sorcery.png",
+    "rarityImage": "E:\\zzz\\Rarity\\Star-C.png",
+    "backgroundImage": "E:\\zzz\\background.png",
+    "Card Location": "E:\\zzz\\Test Game\\images\\Sorcery\\Star-C.png\\Creature\\Serahel.png",
+    "Json Location": "E:\\zzz\\Test Game\\cards\\Sorcery\\Star-C.png\\Creature\\Serahel.json"
+}

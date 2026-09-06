@@ -1,0 +1,33 @@
+{
+    "name": "Eldritch",
+    "className": "Dragon",
+    "classImage": "E:\\zzz\\Master Photo List\\Dragon\\dragon5.png",
+    "attacks": [
+        {
+            "name": "Soul Drain",
+            "description": "Attacks opponent 2 damage",
+            "manaCost": "12"
+        },
+        {
+            "name": "Savage Claws",
+            "description": "Attacks opponent 3 damage",
+            "manaCost": "4"
+        }
+    ],
+    "Mana Card Cost": "3",
+    "ap": "AP 7",
+    "dp": "DP 1",
+    "strength": {
+        "Vigor": "Earth",
+        "image": "SMana/Earth.png"
+    },
+    "weakness": {
+        "Vigor": "Lava",
+        "image": "WMana/Lava.png"
+    },
+    "deckManaImage": "Mana/Fungus.png",
+    "rarityImage": "E:\\zzz\\Rarity\\Braided-C.png",
+    "backgroundImage": "E:\\zzz\\background.png",
+    "Card Location": "E:\\zzz\\Test Game\\images\\Fungus\\Braided-C.png\\Creature\\Eldritch.png",
+    "Json Location": "E:\\zzz\\Test Game\\cards\\Fungus\\Braided-C.png\\Creature\\Eldritch.json"
+}

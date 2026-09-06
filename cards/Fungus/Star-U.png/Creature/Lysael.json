@@ -1,0 +1,33 @@
+{
+    "name": "Lysael",
+    "className": "Valkerie",
+    "classImage": "E:\\zzz\\Master Photo List\\Valkerie\\valkerie4.png",
+    "attacks": [
+        {
+            "name": "Frost Nova",
+            "description": "No spellcasting 3 rounds",
+            "manaCost": "10"
+        },
+        {
+            "name": "Surging Inferno",
+            "description": "Attacks opponent 4 damage",
+            "manaCost": "3"
+        }
+    ],
+    "Mana Card Cost": "7",
+    "ap": "AP 12",
+    "dp": "DP 2",
+    "strength": {
+        "Vigor": "Lightning",
+        "image": "SMana/Lightning.png"
+    },
+    "weakness": {
+        "Vigor": "Moon",
+        "image": "WMana/Moon.png"
+    },
+    "deckManaImage": "Mana/Fungus.png",
+    "rarityImage": "E:\\zzz\\Rarity\\Star-U.png",
+    "backgroundImage": "E:\\zzz\\background.png",
+    "Card Location": "E:\\zzz\\Test Game\\images\\Fungus\\Star-U.png\\Creature\\Lysael.png",
+    "Json Location": "E:\\zzz\\Test Game\\cards\\Fungus\\Star-U.png\\Creature\\Lysael.json"
+}

@@ -1,0 +1,33 @@
+{
+    "name": "Zinn",
+    "className": "Dragon",
+    "classImage": "E:\\zzz\\Master Photo List\\Dragon\\dragon3.png",
+    "attacks": [
+        {
+            "name": "Elemental Stab",
+            "description": "Attacks flying 1 round",
+            "manaCost": "1"
+        },
+        {
+            "name": "Solar Flare",
+            "description": "Opponent -4 life",
+            "manaCost": "10"
+        }
+    ],
+    "Mana Card Cost": "7",
+    "ap": "AP 1",
+    "dp": "DP 7",
+    "strength": {
+        "Vigor": "Lightning",
+        "image": "SMana/Lightning.png"
+    },
+    "weakness": {
+        "Vigor": "Moon",
+        "image": "WMana/Moon.png"
+    },
+    "deckManaImage": "Mana/Fungus.png",
+    "rarityImage": "E:\\zzz\\Rarity\\Runic-R.png",
+    "backgroundImage": "E:\\zzz\\background.png",
+    "Card Location": "E:\\zzz\\Test Game\\images\\Fungus\\Runic-R.png\\Creature\\Zinn.png",
+    "Json Location": "E:\\zzz\\Test Game\\cards\\Fungus\\Runic-R.png\\Creature\\Zinn.json"
+}

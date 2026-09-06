@@ -1,0 +1,33 @@
+{
+    "name": "Jarion",
+    "className": "Fox",
+    "classImage": "E:\\zzz\\Master Photo List\\Fox\\Fox6.png",
+    "attacks": [
+        {
+            "name": "Teleport Teleport",
+            "description": "Teleports caster random location",
+            "manaCost": "2"
+        },
+        {
+            "name": "Savage Claws",
+            "description": "Attacks opponent 3 damage",
+            "manaCost": "8"
+        }
+    ],
+    "Mana Card Cost": "4",
+    "ap": "AP 6",
+    "dp": "DP 1",
+    "strength": {
+        "Vigor": "Lightning",
+        "image": "SMana/Lightning.png"
+    },
+    "weakness": {
+        "Vigor": "Spirit",
+        "image": "WMana/Spirit.png"
+    },
+    "deckManaImage": "Mana/Fairy.png",
+    "rarityImage": "E:\\zzz\\Rarity\\Red Med-G.png",
+    "backgroundImage": "E:\\zzz\\background.png",
+    "Card Location": "E:\\zzz\\Test Game\\images\\Fairy\\Red Med-G.png\\Creature\\Jarion.png",
+    "Json Location": "E:\\zzz\\Test Game\\cards\\Fairy\\Red Med-G.png\\Creature\\Jarion.json"
+}

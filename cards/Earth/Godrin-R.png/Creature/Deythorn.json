@@ -1,0 +1,33 @@
+{
+    "name": "Deythorn",
+    "className": "Elf",
+    "classImage": "E:\\zzz\\Master Photo List\\Elf\\elf7.png",
+    "attacks": [
+        {
+            "name": "Oblivion Eruption",
+            "description": "No attacks 10 turns",
+            "manaCost": "5"
+        },
+        {
+            "name": "Pulsating Thunderstorm",
+            "description": "Attacks all 3 damage",
+            "manaCost": "11"
+        }
+    ],
+    "Mana Card Cost": "5",
+    "ap": "AP 3",
+    "dp": "DP 2",
+    "strength": {
+        "Vigor": "Lightning",
+        "image": "SMana/Lightning.png"
+    },
+    "weakness": {
+        "Vigor": "Ocean",
+        "image": "WMana/Ocean.png"
+    },
+    "deckManaImage": "Mana/Earth.png",
+    "rarityImage": "E:\\zzz\\Rarity\\Godrin-R.png",
+    "backgroundImage": "E:\\zzz\\background.png",
+    "Card Location": "E:\\zzz\\Test Game\\images\\Earth\\Godrin-R.png\\Creature\\Deythorn.png",
+    "Json Location": "E:\\zzz\\Test Game\\cards\\Earth\\Godrin-R.png\\Creature\\Deythorn.json"
+}

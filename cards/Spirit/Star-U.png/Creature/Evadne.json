@@ -1,0 +1,33 @@
+{
+    "name": "Evadne",
+    "className": "Kitsune",
+    "classImage": "E:\\zzz\\Master Photo List\\Kitsune\\Neon Blue Kitsune lvl1.png",
+    "attacks": [
+        {
+            "name": "Frostbite Slash",
+            "description": "Blocks flying 1 round",
+            "manaCost": "8"
+        },
+        {
+            "name": "Celestial Surge",
+            "description": "Heals caster next damage dealt",
+            "manaCost": "7"
+        }
+    ],
+    "Mana Card Cost": "9",
+    "ap": "AP 2",
+    "dp": "DP 12",
+    "strength": {
+        "Vigor": "Ocean",
+        "image": "SMana/Ocean.png"
+    },
+    "weakness": {
+        "Vigor": "Earth",
+        "image": "WMana/Earth.png"
+    },
+    "deckManaImage": "Mana/Spirit.png",
+    "rarityImage": "E:\\zzz\\Rarity\\Star-U.png",
+    "backgroundImage": "E:\\zzz\\background.png",
+    "Card Location": "E:\\zzz\\Test Game\\images\\Spirit\\Star-U.png\\Creature\\Evadne.png",
+    "Json Location": "E:\\zzz\\Test Game\\cards\\Spirit\\Star-U.png\\Creature\\Evadne.json"
+}

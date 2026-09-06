@@ -1,0 +1,33 @@
+{
+    "name": "Miranni",
+    "className": "Archon",
+    "classImage": "E:\\zzz\\Master Photo List\\Archon\\Archon4.png",
+    "attacks": [
+        {
+            "name": "Paradox Paradox",
+            "description": "Randomly casts 2 spells opponent",
+            "manaCost": "10"
+        },
+        {
+            "name": "Jagged Earthquake",
+            "description": "Turns opponent creatures 2 rounds",
+            "manaCost": "11"
+        }
+    ],
+    "Mana Card Cost": "11",
+    "ap": "AP 8",
+    "dp": "DP 9",
+    "strength": {
+        "Vigor": "Sun",
+        "image": "SMana/Sun.png"
+    },
+    "weakness": {
+        "Vigor": "Lava",
+        "image": "WMana/Lava.png"
+    },
+    "deckManaImage": "Mana/Spirit.png",
+    "rarityImage": "E:\\zzz\\Rarity\\Braided-R.png",
+    "backgroundImage": "E:\\zzz\\background.png",
+    "Card Location": "E:\\zzz\\Test Game\\images\\Spirit\\Braided-R.png\\Creature\\Miranni.png",
+    "Json Location": "E:\\zzz\\Test Game\\cards\\Spirit\\Braided-R.png\\Creature\\Miranni.json"
+}

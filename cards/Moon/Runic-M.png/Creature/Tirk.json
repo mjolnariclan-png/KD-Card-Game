@@ -1,0 +1,33 @@
+{
+    "name": "Tirk",
+    "className": "Barbarian",
+    "classImage": "E:\\zzz\\Master Photo List\\Barbarian\\Barbarian5.png",
+    "attacks": [
+        {
+            "name": "Raging Inferno",
+            "description": "Attacks opponent 4 damage",
+            "manaCost": "7"
+        },
+        {
+            "name": "Savage Claws",
+            "description": "Attacks opponent 3 damage",
+            "manaCost": "10"
+        }
+    ],
+    "Mana Card Cost": "7",
+    "ap": "AP 4",
+    "dp": "DP 2",
+    "strength": {
+        "Vigor": "Fairy",
+        "image": "SMana/Fairy.png"
+    },
+    "weakness": {
+        "Vigor": "Sorcery",
+        "image": "WMana/Sorcery.png"
+    },
+    "deckManaImage": "Mana/Moon.png",
+    "rarityImage": "E:\\zzz\\Rarity\\Runic-M.png",
+    "backgroundImage": "E:\\zzz\\background.png",
+    "Card Location": "E:\\zzz\\Test Game\\images\\Moon\\Runic-M.png\\Creature\\Tirk.png",
+    "Json Location": "E:\\zzz\\Test Game\\cards\\Moon\\Runic-M.png\\Creature\\Tirk.json"
+}

@@ -1,0 +1,33 @@
+{
+    "name": "Fradel",
+    "className": "Nightwalker",
+    "classImage": "E:\\zzz\\Master Photo List\\Nightwalker\\nightwalker1.png",
+    "attacks": [
+        {
+            "name": "Shockwave Tremor",
+            "description": "Silences target 3 rounds",
+            "manaCost": "5"
+        },
+        {
+            "name": "Pyroclasmic Eruption",
+            "description": "Attacks all 4 damage",
+            "manaCost": "5"
+        }
+    ],
+    "Mana Card Cost": "5",
+    "ap": "AP 6",
+    "dp": "DP 3",
+    "strength": {
+        "Vigor": "Lightning",
+        "image": "SMana/Lightning.png"
+    },
+    "weakness": {
+        "Vigor": "Spirit",
+        "image": "WMana/Spirit.png"
+    },
+    "deckManaImage": "Mana/Earth.png",
+    "rarityImage": "E:\\zzz\\Rarity\\Fehu-M.png",
+    "backgroundImage": "E:\\zzz\\background.png",
+    "Card Location": "E:\\zzz\\Test Game\\images\\Earth\\Fehu-M.png\\Creature\\Fradel.png",
+    "Json Location": "E:\\zzz\\Test Game\\cards\\Earth\\Fehu-M.png\\Creature\\Fradel.json"
+}

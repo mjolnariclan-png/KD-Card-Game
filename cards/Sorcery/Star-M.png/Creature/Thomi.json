@@ -1,0 +1,33 @@
+{
+    "name": "Thomi",
+    "className": "Fairy",
+    "classImage": "E:\\zzz\\Master Photo List\\Fairy\\Fairy3.png",
+    "attacks": [
+        {
+            "name": "Eager Rain",
+            "description": "Prevents target attack this round",
+            "manaCost": "8"
+        },
+        {
+            "name": "Teleport Teleport",
+            "description": "Teleports caster random location",
+            "manaCost": "2"
+        }
+    ],
+    "Mana Card Cost": "10",
+    "ap": "AP 4",
+    "dp": "DP 6",
+    "strength": {
+        "Vigor": "Lava",
+        "image": "SMana/Lava.png"
+    },
+    "weakness": {
+        "Vigor": "Greed",
+        "image": "WMana/Greed.png"
+    },
+    "deckManaImage": "Mana/Sorcery.png",
+    "rarityImage": "E:\\zzz\\Rarity\\Star-M.png",
+    "backgroundImage": "E:\\zzz\\background.png",
+    "Card Location": "E:\\zzz\\Test Game\\images\\Sorcery\\Star-M.png\\Creature\\Thomi.png",
+    "Json Location": "E:\\zzz\\Test Game\\cards\\Sorcery\\Star-M.png\\Creature\\Thomi.json"
+}

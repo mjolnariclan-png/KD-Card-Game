@@ -1,0 +1,33 @@
+{
+    "name": "Medric",
+    "className": "Ogre",
+    "classImage": "E:\\zzz\\Master Photo List\\Ogre\\ogre2.png",
+    "attacks": [
+        {
+            "name": "Glacial Avalanche",
+            "description": "Attacks all 4 damage",
+            "manaCost": "11"
+        },
+        {
+            "name": "Summoning Summoning",
+            "description": "No summoning 8 rounds",
+            "manaCost": "3"
+        }
+    ],
+    "Mana Card Cost": "6",
+    "ap": "AP 4",
+    "dp": "DP 12",
+    "strength": {
+        "Vigor": "Sorcery",
+        "image": "SMana/Sorcery.png"
+    },
+    "weakness": {
+        "Vigor": "Fungus",
+        "image": "WMana/Fungus.png"
+    },
+    "deckManaImage": "Mana/Lava.png",
+    "rarityImage": "E:\\zzz\\Rarity\\Fehu-R.png",
+    "backgroundImage": "E:\\zzz\\background.png",
+    "Card Location": "E:\\zzz\\Test Game\\images\\Lava\\Fehu-R.png\\Creature\\Medric.png",
+    "Json Location": "E:\\zzz\\Test Game\\cards\\Lava\\Fehu-R.png\\Creature\\Medric.json"
+}

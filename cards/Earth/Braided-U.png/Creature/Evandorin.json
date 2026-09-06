@@ -1,0 +1,33 @@
+{
+    "name": "Evandorin",
+    "className": "Drake",
+    "classImage": "E:\\zzz\\Master Photo List\\Drake\\drake2.png",
+    "attacks": [
+        {
+            "name": "Spectral Specter",
+            "description": "Turns opponent creatures 3 rounds",
+            "manaCost": "3"
+        },
+        {
+            "name": "Twilight Strike",
+            "description": "Attacks opponent 3 damage",
+            "manaCost": "12"
+        }
+    ],
+    "Mana Card Cost": "3",
+    "ap": "AP 7",
+    "dp": "DP 4",
+    "strength": {
+        "Vigor": "Lightning",
+        "image": "SMana/Lightning.png"
+    },
+    "weakness": {
+        "Vigor": "Spirit",
+        "image": "WMana/Spirit.png"
+    },
+    "deckManaImage": "Mana/Earth.png",
+    "rarityImage": "E:\\zzz\\Rarity\\Braided-U.png",
+    "backgroundImage": "E:\\zzz\\background.png",
+    "Card Location": "E:\\zzz\\Test Game\\images\\Earth\\Braided-U.png\\Creature\\Evandorin.png",
+    "Json Location": "E:\\zzz\\Test Game\\cards\\Earth\\Braided-U.png\\Creature\\Evandorin.json"
+}

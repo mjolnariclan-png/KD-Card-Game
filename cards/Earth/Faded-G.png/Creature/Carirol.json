@@ -1,0 +1,33 @@
+{
+    "name": "Carirol",
+    "className": "Warrior",
+    "classImage": "E:\\zzz\\Master Photo List\\Warrior\\nwarrior.png",
+    "attacks": [
+        {
+            "name": "Shimmering Mirage",
+            "description": "Opponent -4 life",
+            "manaCost": "7"
+        },
+        {
+            "name": "Acid Rainfall",
+            "description": "Corrosive rain, damages all 2 rounds",
+            "manaCost": "8"
+        }
+    ],
+    "Mana Card Cost": "11",
+    "ap": "AP 8",
+    "dp": "DP 11",
+    "strength": {
+        "Vigor": "Fungus",
+        "image": "SMana/Fungus.png"
+    },
+    "weakness": {
+        "Vigor": "Spirit",
+        "image": "WMana/Spirit.png"
+    },
+    "deckManaImage": "Mana/Earth.png",
+    "rarityImage": "E:\\zzz\\Rarity\\Faded-G.png",
+    "backgroundImage": "E:\\zzz\\background.png",
+    "Card Location": "E:\\zzz\\Test Game\\images\\Earth\\Faded-G.png\\Creature\\Carirol.png",
+    "Json Location": "E:\\zzz\\Test Game\\cards\\Earth\\Faded-G.png\\Creature\\Carirol.json"
+}

@@ -1,0 +1,33 @@
+{
+    "name": "Fenris",
+    "className": "Gorgon",
+    "classImage": "E:\\zzz\\Master Photo List\\Gorgon\\Gorgon8.png",
+    "attacks": [
+        {
+            "name": "Temporal Rift",
+            "description": "No spellcasting 3 rounds",
+            "manaCost": "3"
+        },
+        {
+            "name": "Thunderstrike",
+            "description": "Attacks opponent 3 damage",
+            "manaCost": "2"
+        }
+    ],
+    "Mana Card Cost": "5",
+    "ap": "AP 10",
+    "dp": "DP 7",
+    "strength": {
+        "Vigor": "Sun",
+        "image": "SMana/Sun.png"
+    },
+    "weakness": {
+        "Vigor": "Ocean",
+        "image": "WMana/Ocean.png"
+    },
+    "deckManaImage": "Mana/Earth.png",
+    "rarityImage": "E:\\zzz\\Rarity\\Fehu-C.png",
+    "backgroundImage": "E:\\zzz\\background.png",
+    "Card Location": "E:\\zzz\\Test Game\\images\\Earth\\Fehu-C.png\\Creature\\Fenris.png",
+    "Json Location": "E:\\zzz\\Test Game\\cards\\Earth\\Fehu-C.png\\Creature\\Fenris.json"
+}

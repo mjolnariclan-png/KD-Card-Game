@@ -1,0 +1,33 @@
+{
+    "name": "Alarionna",
+    "className": "Viking",
+    "classImage": "E:\\zzz\\Master Photo List\\Viking\\viking13.png",
+    "attacks": [
+        {
+            "name": "Molten Lava Burst",
+            "description": "Attacks all 3 damage",
+            "manaCost": "10"
+        },
+        {
+            "name": "Eclipse of Doom",
+            "description": "No attacks 9 turns",
+            "manaCost": "1"
+        }
+    ],
+    "Mana Card Cost": "8",
+    "ap": "AP 12",
+    "dp": "DP 8",
+    "strength": {
+        "Vigor": "Sorcery",
+        "image": "SMana/Sorcery.png"
+    },
+    "weakness": {
+        "Vigor": "Fungus",
+        "image": "WMana/Fungus.png"
+    },
+    "deckManaImage": "Mana/Fairy.png",
+    "rarityImage": "E:\\zzz\\Rarity\\Star-R.png",
+    "backgroundImage": "E:\\zzz\\background.png",
+    "Card Location": "E:\\zzz\\Test Game\\images\\Fairy\\Star-R.png\\Creature\\Alarionna.png",
+    "Json Location": "E:\\zzz\\Test Game\\cards\\Fairy\\Star-R.png\\Creature\\Alarionna.json"
+}

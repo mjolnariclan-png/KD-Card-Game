@@ -1,0 +1,33 @@
+{
+    "name": "Zinn",
+    "className": "Spirit",
+    "classImage": "E:\\zzz\\Master Photo List\\Spirit\\spirit.png",
+    "attacks": [
+        {
+            "name": "Lethal Venom Strike",
+            "description": "Silences target 3 rounds",
+            "manaCost": "8"
+        },
+        {
+            "name": "Cosmic Crush",
+            "description": "Attacks opponent 4 damage",
+            "manaCost": "1"
+        }
+    ],
+    "Mana Card Cost": "4",
+    "ap": "AP 8",
+    "dp": "DP 4",
+    "strength": {
+        "Vigor": "Spirit",
+        "image": "SMana/Spirit.png"
+    },
+    "weakness": {
+        "Vigor": "Moon",
+        "image": "WMana/Moon.png"
+    },
+    "deckManaImage": "Mana/Tar.png",
+    "rarityImage": "E:\\zzz\\Rarity\\Fehu-M.png",
+    "backgroundImage": "E:\\zzz\\background.png",
+    "Card Location": "E:\\zzz\\Test Game\\images\\Tar\\Fehu-M.png\\Creature\\Zinn.png",
+    "Json Location": "E:\\zzz\\Test Game\\cards\\Tar\\Fehu-M.png\\Creature\\Zinn.json"
+}

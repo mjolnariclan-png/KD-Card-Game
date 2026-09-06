@@ -1,0 +1,33 @@
+{
+    "name": "Baka",
+    "className": "Lion",
+    "classImage": "E:\\zzz\\Master Photo List\\Lion\\Lion2.png",
+    "attacks": [
+        {
+            "name": "Galactic Impact",
+            "description": "Reflects opponent spell x3 damage",
+            "manaCost": "10"
+        },
+        {
+            "name": "Death Release",
+            "description": "Puts target meditative state 3 turns",
+            "manaCost": "8"
+        }
+    ],
+    "Mana Card Cost": "3",
+    "ap": "AP 5",
+    "dp": "DP 9",
+    "strength": {
+        "Vigor": "Earth",
+        "image": "SMana/Earth.png"
+    },
+    "weakness": {
+        "Vigor": "Sun",
+        "image": "WMana/Sun.png"
+    },
+    "deckManaImage": "Mana/Moon.png",
+    "rarityImage": "E:\\zzz\\Rarity\\Red Med-U.png",
+    "backgroundImage": "E:\\zzz\\background.png",
+    "Card Location": "E:\\zzz\\Test Game\\images\\Moon\\Red Med-U.png\\Creature\\Baka.png",
+    "Json Location": "E:\\zzz\\Test Game\\cards\\Moon\\Red Med-U.png\\Creature\\Baka.json"
+}

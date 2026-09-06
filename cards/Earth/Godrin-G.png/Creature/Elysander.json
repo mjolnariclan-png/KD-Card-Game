@@ -1,0 +1,33 @@
+{
+    "name": "Elysander",
+    "className": "Witch",
+    "classImage": "E:\\zzz\\Master Photo List\\Witch\\witch8.png",
+    "attacks": [
+        {
+            "name": "Savage Claws",
+            "description": "Attacks opponent 3 damage",
+            "manaCost": "2"
+        },
+        {
+            "name": "Twilight Eclipse",
+            "description": "Turns opponent harmless 3 turns",
+            "manaCost": "12"
+        }
+    ],
+    "Mana Card Cost": "11",
+    "ap": "AP 9",
+    "dp": "DP 5",
+    "strength": {
+        "Vigor": "Fungus",
+        "image": "SMana/Fungus.png"
+    },
+    "weakness": {
+        "Vigor": "Tar",
+        "image": "WMana/Tar.png"
+    },
+    "deckManaImage": "Mana/Earth.png",
+    "rarityImage": "E:\\zzz\\Rarity\\Godrin-G.png",
+    "backgroundImage": "E:\\zzz\\background.png",
+    "Card Location": "E:\\zzz\\Test Game\\images\\Earth\\Godrin-G.png\\Creature\\Elysander.png",
+    "Json Location": "E:\\zzz\\Test Game\\cards\\Earth\\Godrin-G.png\\Creature\\Elysander.json"
+}

@@ -1,0 +1,33 @@
+{
+    "name": "Elysandra",
+    "className": "Werewolf",
+    "classImage": "E:\\zzz\\Master Photo List\\Werewolf\\werewolf3.png",
+    "attacks": [
+        {
+            "name": "Temporal Shift",
+            "description": "Turns opponent creatures 2 rounds",
+            "manaCost": "1"
+        },
+        {
+            "name": "Oblivion Oblivion",
+            "description": "No attacks 4 turns",
+            "manaCost": "9"
+        }
+    ],
+    "Mana Card Cost": "12",
+    "ap": "AP 2",
+    "dp": "DP 11",
+    "strength": {
+        "Vigor": "Spirit",
+        "image": "SMana/Spirit.png"
+    },
+    "weakness": {
+        "Vigor": "Moon",
+        "image": "WMana/Moon.png"
+    },
+    "deckManaImage": "Mana/Fungus.png",
+    "rarityImage": "E:\\zzz\\Rarity\\Runic-U.png",
+    "backgroundImage": "E:\\zzz\\background.png",
+    "Card Location": "E:\\zzz\\Test Game\\images\\Fungus\\Runic-U.png\\Creature\\Elysandra.png",
+    "Json Location": "E:\\zzz\\Test Game\\cards\\Fungus\\Runic-U.png\\Creature\\Elysandra.json"
+}

@@ -1,0 +1,33 @@
+{
+    "name": "Medic",
+    "className": "Aasimar",
+    "classImage": "E:\\zzz\\Master Photo List\\Aasimar\\67b67163-eff3-4510-96b2-2386fe4a5dbe.jpg",
+    "attacks": [
+        {
+            "name": "Shifting Sands",
+            "description": "Blocks ground 2 rounds",
+            "manaCost": "10"
+        },
+        {
+            "name": "Eliminating Crocodile",
+            "description": "Protects against attacks",
+            "manaCost": "12"
+        }
+    ],
+    "Mana Card Cost": "8",
+    "ap": "AP 9",
+    "dp": "DP 11",
+    "strength": {
+        "Vigor": "Fairy",
+        "image": "SMana/Fairy.png"
+    },
+    "weakness": {
+        "Vigor": "Earth",
+        "image": "WMana/Earth.png"
+    },
+    "deckManaImage": "Mana/Sorcery.png",
+    "rarityImage": "E:\\zzz\\Rarity\\Faded-U.png",
+    "backgroundImage": "E:\\zzz\\background.png",
+    "Card Location": "E:\\zzz\\Test Game\\images\\Sorcery\\Faded-U.png\\Creature\\Medic.png",
+    "Json Location": "E:\\zzz\\Test Game\\cards\\Sorcery\\Faded-U.png\\Creature\\Medic.json"
+}

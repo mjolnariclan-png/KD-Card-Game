@@ -1,0 +1,33 @@
+{
+    "name": "Hugitrak",
+    "className": "Elf",
+    "classImage": "E:\\zzz\\Master Photo List\\Elf\\elf5.png",
+    "attacks": [
+        {
+            "name": "Winter Blast",
+            "description": "Opponent -4 life",
+            "manaCost": "12"
+        },
+        {
+            "name": "Omega Thunderstorm",
+            "description": "Attacks all 4 damage",
+            "manaCost": "8"
+        }
+    ],
+    "Mana Card Cost": "12",
+    "ap": "AP 8",
+    "dp": "DP 11",
+    "strength": {
+        "Vigor": "Lightning",
+        "image": "SMana/Lightning.png"
+    },
+    "weakness": {
+        "Vigor": "Moon",
+        "image": "WMana/Moon.png"
+    },
+    "deckManaImage": "Mana/Fungus.png",
+    "rarityImage": "E:\\zzz\\Rarity\\Godrin-R.png",
+    "backgroundImage": "E:\\zzz\\background.png",
+    "Card Location": "E:\\zzz\\Test Game\\images\\Fungus\\Godrin-R.png\\Creature\\Hugitrak.png",
+    "Json Location": "E:\\zzz\\Test Game\\cards\\Fungus\\Godrin-R.png\\Creature\\Hugitrak.json"
+}

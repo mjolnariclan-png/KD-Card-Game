@@ -1,0 +1,33 @@
+{
+    "name": "Zoran",
+    "className": "Knight",
+    "classImage": "E:\\zzz\\Master Photo List\\Knight\\Knight7.png",
+    "attacks": [
+        {
+            "name": "Jagged Earthquake",
+            "description": "Turns opponent creatures 2 rounds",
+            "manaCost": "11"
+        },
+        {
+            "name": "Swift Strike",
+            "description": "Attacks opponent 2 damage",
+            "manaCost": "1"
+        }
+    ],
+    "Mana Card Cost": "1",
+    "ap": "AP 8",
+    "dp": "DP 11",
+    "strength": {
+        "Vigor": "Sorcery",
+        "image": "SMana/Sorcery.png"
+    },
+    "weakness": {
+        "Vigor": "Earth",
+        "image": "WMana/Earth.png"
+    },
+    "deckManaImage": "Mana/Tar.png",
+    "rarityImage": "E:\\zzz\\Rarity\\Faded-R.png",
+    "backgroundImage": "E:\\zzz\\background.png",
+    "Card Location": "E:\\zzz\\Test Game\\images\\Tar\\Faded-R.png\\Creature\\Zoran.png",
+    "Json Location": "E:\\zzz\\Test Game\\cards\\Tar\\Faded-R.png\\Creature\\Zoran.json"
+}

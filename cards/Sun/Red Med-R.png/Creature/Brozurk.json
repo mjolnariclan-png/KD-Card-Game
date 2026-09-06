@@ -1,0 +1,33 @@
+{
+    "name": "Brozurk",
+    "className": "Ogre",
+    "classImage": "E:\\zzz\\Master Photo List\\Ogre\\ogre.png",
+    "attacks": [
+        {
+            "name": "Unholy Blast",
+            "description": "Attacks opponent 4 damage",
+            "manaCost": "10"
+        },
+        {
+            "name": "Lethal Venom Strike",
+            "description": "Silences target 3 rounds",
+            "manaCost": "5"
+        }
+    ],
+    "Mana Card Cost": "11",
+    "ap": "AP 6",
+    "dp": "DP 3",
+    "strength": {
+        "Vigor": "Fairy",
+        "image": "SMana/Fairy.png"
+    },
+    "weakness": {
+        "Vigor": "Lava",
+        "image": "WMana/Lava.png"
+    },
+    "deckManaImage": "Mana/Sun.png",
+    "rarityImage": "E:\\zzz\\Rarity\\Red Med-R.png",
+    "backgroundImage": "E:\\zzz\\background.png",
+    "Card Location": "E:\\zzz\\Test Game\\images\\Sun\\Red Med-R.png\\Creature\\Brozurk.png",
+    "Json Location": "E:\\zzz\\Test Game\\cards\\Sun\\Red Med-R.png\\Creature\\Brozurk.json"
+}

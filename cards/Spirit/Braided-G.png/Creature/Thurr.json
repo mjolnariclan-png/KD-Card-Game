@@ -1,0 +1,33 @@
+{
+    "name": "Thurr",
+    "className": "Vampire",
+    "classImage": "E:\\zzz\\Master Photo List\\Vampire\\vampire7.png",
+    "attacks": [
+        {
+            "name": "Eliminating Crocodile",
+            "description": "Protects against attacks",
+            "manaCost": "10"
+        },
+        {
+            "name": "Sonic Blast",
+            "description": "Attacks opponent 3 damage",
+            "manaCost": "2"
+        }
+    ],
+    "Mana Card Cost": "8",
+    "ap": "AP 1",
+    "dp": "DP 12",
+    "strength": {
+        "Vigor": "Sun",
+        "image": "SMana/Sun.png"
+    },
+    "weakness": {
+        "Vigor": "Fungus",
+        "image": "WMana/Fungus.png"
+    },
+    "deckManaImage": "Mana/Spirit.png",
+    "rarityImage": "E:\\zzz\\Rarity\\Braided-G.png",
+    "backgroundImage": "E:\\zzz\\background.png",
+    "Card Location": "E:\\zzz\\Test Game\\images\\Spirit\\Braided-G.png\\Creature\\Thurr.png",
+    "Json Location": "E:\\zzz\\Test Game\\cards\\Spirit\\Braided-G.png\\Creature\\Thurr.json"
+}
