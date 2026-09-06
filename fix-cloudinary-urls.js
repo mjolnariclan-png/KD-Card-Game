@@ -20,7 +20,7 @@ async function fixCloudinaryURLs() {
         for (const set of sets) {
             const cardsCollection = db.collection(`cards_${set.set_name.replace(/\s+/g, '_')}`);
             
-            // Find cards with malformed Cloudinary URLs containing local paths
+            // Find cards with ANY URL containing local paths (including malformed Cloudinary URLs)
             const cardsWithBadURLs = await cardsCollection.find({
                 $or: [
                     { standard_path: { $regex: /F:/i } },
@@ -38,23 +38,17 @@ async function fixCloudinaryURLs() {
                 for (const card of cardsWithBadURLs) {
                     const updates = {};
                     
-                    // Fix standard_path
-                    if (card.standard_path && (card.standard_path.includes('F:/') || card.standard_path.includes('B:/'))) {
-                        // Remove the local path part and use a placeholder
-                        const fileName = card.file_name || card.name + '.png';
-                        updates.standard_path = `https://res.cloudinary.com/sywzs1w9/image/upload/v1/tcg-cards/${set.set_name.replace(/\s+/g, '%20')}/${fileName}`;
-                    }
-                    
-                    // Fix image
+                    // Remove malformed URLs entirely and let frontend use standard_path with fallbacks
                     if (card.image && (card.image.includes('F:/') || card.image.includes('B:/'))) {
-                        const fileName = card.file_name || card.name + '.png';
-                        updates.image = `https://res.cloudinary.com/sywzs1w9/image/upload/v1/tcg-cards/${set.set_name.replace(/\s+/g, '%20')}/${fileName}`;
+                        updates.image = null; // Clear the bad URL
                     }
                     
-                    // Fix print_path
                     if (card.print_path && (card.print_path.includes('F:/') || card.print_path.includes('B:/'))) {
-                        const fileName = card.file_name || card.name + '.png';
-                        updates.print_path = `https://res.cloudinary.com/sywzs1w9/image/upload/v1/tcg-cards/${set.set_name.replace(/\s+/g, '%20')}/${fileName}`;
+                        updates.print_path = null; // Clear the bad URL
+                    }
+                    
+                    if (card.standard_path && (card.standard_path.includes('F:/') || card.standard_path.includes('B:/'))) {
+                        updates.standard_path = null; // Clear the bad URL
                     }
                     
                     if (Object.keys(updates).length > 0) {
@@ -68,7 +62,7 @@ async function fixCloudinaryURLs() {
             }
         }
         
-        console.log(`\n✅ Fixed ${totalFixed} card URLs`);
+        console.log(`\n✅ Cleared ${totalFixed} malformed URLs`);
         
     } catch (error) {
         console.error('Error:', error);

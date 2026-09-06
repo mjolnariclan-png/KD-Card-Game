@@ -1,5 +1,5 @@
-// Fallback for card images that fail to load
-function handleCardImageError(img, color, emoji, centered) {
+// Make handleCardImageError globally accessible
+window.handleCardImageError = function(img, color, emoji, centered) {
     img.style.display = 'none';
     const parent = img.parentElement;
     parent.style.background = color;
@@ -13,6 +13,11 @@ function handleCardImageError(img, color, emoji, centered) {
     }
     span.textContent = emoji;
     parent.appendChild(span);
+};
+
+// Fallback for card images that fail to load
+function handleCardImageError(img, color, emoji, centered) {
+    window.handleCardImageError(img, color, emoji, centered);
 }
 
 // Normalize raw card "type" values (e.g. "Primordial Being") from MongoDB into the
