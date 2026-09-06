@@ -884,6 +884,31 @@ class BattlefieldUI {
                this.gameState.player.battlefield.find(card => card.id == cardId);
     }
     
+    getColorForVigor(vigorType) {
+        const colors = {
+            'Earth': '#8B4513',
+            'Fairy': '#FF69B4',
+            'Fungus': '#6B8E23',
+            'Greed': '#FFD700',
+            'Lava': '#FF4500',
+            'Lightning': '#FFD700',
+            'Moon': '#C0C0C0',
+            'Ocean': '#4169E1',
+            'Sorcery': '#9400D3',
+            'Spirit': '#6A5ACD',
+            'Sun': '#FFD700',
+            'Tar': '#2F4F4F',
+            'Chaos': '#8B0000',
+            'Purity': '#FFFFFF',
+            'Flame': '#FF6347',
+            'Frost': '#87CEEB',
+            'Nature': '#228B22',
+            'Death': '#4B0082',
+            'Life': '#32CD32'
+        };
+        return colors[vigorType] || '#666666';
+    }
+
     createCardElement(card, isFaceDown = false, isDraggable = false) {
         const cardEl = document.createElement('div');
         cardEl.className = 'card';
