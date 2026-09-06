@@ -23,6 +23,11 @@ async function uploadCardImages() {
     });
 
     console.log(`Found ${sets.length} card sets to process`);
+    
+    // First, delete all existing assets in tcg-cards folder
+    console.log('Cleaning up existing Cloudinary assets...');
+    await cleanupCloudinaryAssets();
+    
     let totalUploaded = 0;
     let totalSkipped = 0;
     let totalErrors = 0;
@@ -40,8 +45,52 @@ async function uploadCardImages() {
 
     console.log(`\n✅ Upload complete!`);
     console.log(`Total uploaded: ${totalUploaded}`);
-    console.log(`Total skipped (already exists): ${totalSkipped}`);
+    console.log(`Total skipped: ${totalSkipped}`);
     console.log(`Total errors: ${totalErrors}`);
+}
+
+// Clean up existing Cloudinary assets before uploading
+async function cleanupCloudinaryAssets() {
+    try {
+        let totalDeleted = 0;
+        let nextCursor = null;
+        
+        do {
+            // Get all resources in the tcg-cards folder (with pagination)
+            const resources = await cloudinary.api.resources({
+                type: 'upload',
+                prefix: 'tcg-cards',
+                resource_type: 'image',
+                max_results: 500,
+                next_cursor: nextCursor
+            });
+            
+            if (resources.resources && resources.resources.length > 0) {
+                const publicIds = resources.resources.map(r => r.public_id);
+                
+                // Delete existing assets in batches
+                if (publicIds.length > 0) {
+                    const deleteResult = await cloudinary.api.delete_resources(publicIds, {
+                        resource_type: 'image'
+                    });
+                    
+                    const deletedCount = deleteResult.deleted?.deleted?.length || publicIds.length;
+                    totalDeleted += deletedCount;
+                    console.log(`🗑️  Deleted ${deletedCount} assets (batch)`);
+                }
+            }
+            
+            nextCursor = resources.next_cursor;
+        } while (nextCursor);
+        
+        console.log(`✅ Deleted ${totalDeleted} existing assets from Cloudinary`);
+    } catch (error) {
+        if (error.http_code !== 404) {
+            console.log(`⚠️  Warning: Could not clean up existing assets: ${error.message}`);
+        } else {
+            console.log('✅ No existing assets to clean up');
+        }
+    }
 }
 
 async function uploadImagesFromDirectory(dirPath, setPrefix) {
@@ -84,15 +133,17 @@ async function uploadSingleImage(imagePath, setPrefix) {
         
         // Create organized folder structure: tcg-cards/{Set Name}/{Card Type}/{Vigor Type}/{filename}
         const pathParts = relativePath.split(path.sep);
-        const folderStructure = pathParts.slice(0, -1).join('/'); // Remove filename, keep folders
         const fileName = pathParts[pathParts.length - 1]; // Get filename
+        const folderStructure = pathParts.slice(0, -1).join('/'); // Remove filename, keep folders
         
-        const publicId = `${folderStructure}/${fileName.replace(/\.[^/.]+$/, '')}`;
+        // Create nested folder path for Cloudinary
+        const fullFolderPath = `tcg-cards/${folderStructure}`;
+        const publicId = fileName.replace(/\.[^/.]+$/, '');
         
         // Upload with organized folder structure
         const result = await cloudinary.uploader.upload(imagePath, {
             public_id: publicId,
-            folder: 'tcg-cards',
+            folder: fullFolderPath,
             resource_type: 'image',
             overwrite: true // Overwrite if exists (clean update)
         });

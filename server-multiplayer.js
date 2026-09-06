@@ -850,12 +850,25 @@ function generateDeck(player, setName = 'Ash Cycle', vigorType = null) {
     const manifest = cardManifests[setName];
     const cards = manifest.cards;
 
-    // Helper function to convert B:\Cards paths to B:\Sets paths
+    // Helper function to convert local paths to Cloudinary URLs
     function convertImagePath(originalPath, setName) {
         if (!originalPath) return null;
+        
+        // If it's already a Cloudinary URL, return it as-is
+        if (originalPath.startsWith('http://') || originalPath.startsWith('https://')) {
+            return originalPath;
+        }
+        
         // Convert from B:\Cards\Chaos\Vigor\Chaos_Warpbinder.png
-        // to B:\Sets\Ash Cycle\Chaos\Vigor\Chaos_Warpbinder.png
-        return originalPath.replace('B:\\Cards', `B:\\Sets\\${setName}`);
+        // to Cloudinary URL with nested folders
+        const relativePath = originalPath.replace('B:\\Cards', `B:\\Sets\\${setName}`);
+        const fileName = path.basename(relativePath);
+        const folderStructure = path.dirname(relativePath).replace('B:\\Sets\\', '').replace(/\\/g, '/');
+        
+        // Generate Cloudinary URL with nested folder structure
+        const fullFolderPath = `tcg-cards/${folderStructure}`;
+        const publicId = fileName.replace(/\.[^/.]+$/, '');
+        return cloudinary.url(`${fullFolderPath}/${publicId}`);
     }
 
     // Helper function to convert manifest card to game card
