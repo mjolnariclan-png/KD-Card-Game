@@ -1,8 +1,9 @@
 {
   "name": "test-game",
   "version": "1.0.0",
-  "main": "deck-script.js",
+  "main": "server-multiplayer.js",
   "scripts": {
+    "start": "node server-multiplayer.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "keywords": [],
