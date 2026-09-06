@@ -4,6 +4,9 @@
   "main": "server-multiplayer.js",
   "scripts": {
     "start": "node server-multiplayer.js",
+    "update-cards": "node upload-manifests.js && node upload-images.js",
+    "update-manifests": "node upload-manifests.js",
+    "update-images": "node upload-images.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "keywords": [],

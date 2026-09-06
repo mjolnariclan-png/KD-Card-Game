@@ -79,34 +79,22 @@ function isImageFile(filename) {
 
 async function uploadSingleImage(imagePath, setPrefix) {
     try {
-        // Check if already uploaded (avoid duplicates)
+        // Convert local path to organized cloudinary folder structure
         const relativePath = path.relative('B:\\Sets', imagePath);
-        const publicId = relativePath.replace(/\\/g, '/').replace(/\.[^/.]+$/, '');
         
-        // Check if already exists in Cloudinary
-        try {
-            const existingResource = await cloudinary.api.resource(publicId, {
-                type: 'upload',
-                resource_type: 'image'
-            });
-            
-            if (existingResource) {
-                console.log(`⏭️  Skipped (already exists): ${relativePath}`);
-                return 'skipped';
-            }
-        } catch (error) {
-            // Resource doesn't exist, proceed with upload
-            if (error.http_code !== 404) {
-                console.log(`⏭️  Skipped (error checking): ${relativePath}`);
-                return 'skipped';
-            }
-        }
+        // Create organized folder structure: tcg-cards/{Set Name}/{Card Type}/{Vigor Type}/{filename}
+        const pathParts = relativePath.split(path.sep);
+        const folderStructure = pathParts.slice(0, -1).join('/'); // Remove filename, keep folders
+        const fileName = pathParts[pathParts.length - 1]; // Get filename
         
+        const publicId = `${folderStructure}/${fileName.replace(/\.[^/.]+$/, '')}`;
+        
+        // Upload with organized folder structure
         const result = await cloudinary.uploader.upload(imagePath, {
             public_id: publicId,
             folder: 'tcg-cards',
             resource_type: 'image',
-            overwrite: false // Don't overwrite existing images
+            overwrite: true // Overwrite if exists (clean update)
         });
         
         console.log(`✅ Uploaded: ${relativePath} -> ${result.secure_url}`);
