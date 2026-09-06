@@ -923,7 +923,7 @@ class BattlefieldUI {
                     <div class="card-cost">0</div>
                     <div class="card-name primordial-name">${card.name}</div>
                     <div class="card-image">
-                        <img src="${card.image}" alt="${card.name}" onerror="this.style.display='none'; this.parentElement.style.background='${card.color}'; this.parentElement.innerHTML='<span style=\'font-size:3em; position:absolute; top:50%; left:50%; transform:translate(-50%, -50%);\'>👑</span>'">
+                        <img src="${card.standard_path || card.image}" alt="${card.name}" onerror="this.style.display='none'; this.parentElement.style.background='${card.color}'; this.parentElement.innerHTML='<span style=\'font-size:3em; position:absolute; top:50%; left:50%; transform:translate(-50%, -50%);\'>👑</span>'">
                     </div>
                     <div class="card-stats">
                         <span class="card-attack">⚔${card.attack}</span>
@@ -959,7 +959,7 @@ class BattlefieldUI {
                     <div class="card-cost">${card.manaCost}</div>
                     <div class="card-name">${card.name}</div>
                     <div class="card-image">
-                        <img src="${card.image}" alt="${card.name}" onerror="this.style.display='none'; this.parentElement.style.background='${card.color}'; this.parentElement.innerHTML='<span style=\'font-size:3em; position:absolute; top:50%; left:50%; transform:translate(-50%, -50%);\'>⚔️</span>'">
+                        <img src="${card.standard_path || card.image}" alt="${card.name}" onerror="this.style.display='none'; this.parentElement.style.background='${card.color}'; this.parentElement.innerHTML='<span style=\'font-size:3em; position:absolute; top:50%; left:50%; transform:translate(-50%, -50%);\'>⚔️</span>'">
                     </div>
                     <div class="card-stats">
                         <span class="card-attack">⚔${card.attack}</span>
