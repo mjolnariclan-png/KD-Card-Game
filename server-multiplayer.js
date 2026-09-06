@@ -31,7 +31,13 @@ let availableSets = [];
 // Connect to MongoDB
 async function connectToMongoDB() {
     try {
-        client = new MongoClient(MONGODB_URI);
+        client = new MongoClient(MONGODB_URI, {
+            ssl: true,
+            tls: true,
+            tlsAllowInvalidCertificates: true,
+            serverSelectionTimeoutMS: 5000,
+            connectTimeoutMS: 10000
+        });
         await client.connect();
         console.log('Connected to MongoDB Atlas');
         db = client.db(DB_NAME);
