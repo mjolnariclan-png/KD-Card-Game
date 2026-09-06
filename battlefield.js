@@ -1,3 +1,20 @@
+// Fallback for card images that fail to load
+function handleCardImageError(img, color, emoji, centered) {
+    img.style.display = 'none';
+    const parent = img.parentElement;
+    parent.style.background = color;
+    const span = document.createElement('span');
+    span.style.fontSize = '3em';
+    if (centered) {
+        span.style.position = 'absolute';
+        span.style.top = '50%';
+        span.style.left = '50%';
+        span.style.transform = 'translate(-50%, -50%)';
+    }
+    span.textContent = emoji;
+    parent.appendChild(span);
+}
+
 // Game State Management
 class GameState {
     constructor() {
@@ -947,7 +964,7 @@ class BattlefieldUI {
                     <div class="card-cost">0</div>
                     <div class="card-name">${card.name}</div>
                     <div class="card-image vigor-icon">
-                        <img src="${cardImage}" alt="${card.name}" onerror="this.style.display='none'; this.parentElement.style.background='${color}'; this.parentElement.innerHTML='<span style=\'font-size:3em; position:absolute; top:50%; left:50%; transform:translate(-50%, -50%);\'>💎</span>'">
+                        <img src="${cardImage}" alt="${card.name}" onerror="handleCardImageError(this, '${color}', '💎', true)">
                     </div>
                     <div class="card-description">+1 Mana</div>
                 `;
@@ -956,7 +973,7 @@ class BattlefieldUI {
                     <div class="card-cost">${manaCost}</div>
                     <div class="card-name primordial-name">${card.name}</div>
                     <div class="card-image">
-                        <img src="${cardImage}" alt="${card.name}" onerror="this.style.display='none'; this.parentElement.style.background='${color}'; this.parentElement.innerHTML='<span style=\'font-size:3em; position:absolute; top:50%; left:50%; transform:translate(-50%, -50%);\'>👑</span>'">
+                        <img src="${cardImage}" alt="${card.name}" onerror="handleCardImageError(this, '${color}', '👑', true)">
                     </div>
                     <div class="card-stats">
                         <span class="card-attack">⚔${attack}</span>
@@ -969,7 +986,7 @@ class BattlefieldUI {
                     <div class="card-cost">${manaCost}</div>
                     <div class="card-name">${card.name}</div>
                     <div class="card-image rune-icon">
-                        <img src="${cardImage}" alt="${card.name}" onerror="this.style.display='none'; this.parentElement.style.background='${color}'; this.parentElement.innerHTML='<span style=\'font-size:3em;\'>✨</span>'">
+                        <img src="${cardImage}" alt="${card.name}" onerror="handleCardImageError(this, '${color}', '✨', false)">
                     </div>
                     <div class="card-description">One-time use</div>
                 `;
@@ -979,7 +996,7 @@ class BattlefieldUI {
                     <div class="card-name">${card.name}</div>
                     <div class="card-class">${card.className || ''}</div>
                     <div class="card-image equipment-icon">
-                        <img src="${cardImage}" alt="${card.name}" onerror="this.style.display='none'; this.parentElement.style.background='${color}'; this.parentElement.innerHTML='<span style=\'font-size:3em;\'>⚔️</span>'">
+                        <img src="${cardImage}" alt="${card.name}" onerror="handleCardImageError(this, '${color}', '⚔️', false)">
                     </div>
                     <div class="card-stats">
                         <span class="card-attack">+${attack}</span>
@@ -994,7 +1011,7 @@ class BattlefieldUI {
                     <div class="card-name">${card.name}</div>
                     <div class="card-class">${card.className || ''}</div>
                     <div class="card-image">
-                        <img src="${cardImage}" alt="${card.name}" onerror="this.style.display='none'; this.parentElement.style.background='${color}'; this.parentElement.innerHTML='<span style=\'font-size:3em; position:absolute; top:50%; left:50%; transform:translate(-50%, -50%);\'>⚔️</span>'">
+                        <img src="${cardImage}" alt="${card.name}" onerror="handleCardImageError(this, '${color}', '⚔️', true)">
                     </div>
                     <div class="card-stats">
                         <span class="card-attack">⚔${attack}</span>
