@@ -143,6 +143,104 @@ app.get('/api/sets', (req, res) => {
     });
 });
 
+// Get available decks
+app.get('/api/decks', (req, res) => {
+    try {
+        const fs = require('fs');
+        const path = require('path');
+        const decksDir = path.join(__dirname, 'decks');
+        
+        if (!fs.existsSync(decksDir)) {
+            return res.json({ success: true, decks: [] });
+        }
+        
+        const deckFiles = fs.readdirSync(decksDir).filter(file => file.endsWith('.json'));
+        const decks = [];
+        
+        deckFiles.forEach(file => {
+            try {
+                const deckPath = path.join(decksDir, file);
+                const deckData = JSON.parse(fs.readFileSync(deckPath, 'utf8'));
+                decks.push({
+                    name: deckData.deck_name,
+                    set: deckData.set,
+                    vigor: deckData.vigor,
+                    file: file
+                });
+            } catch (error) {
+                console.error(`Error reading deck file ${file}:`, error);
+            }
+        });
+        
+        res.json({ success: true, decks });
+    } catch (error) {
+        console.error('Error loading decks:', error);
+        res.json({ success: false, error: error.message, decks: [] });
+    }
+});
+
+// Get specific deck with full card data from MongoDB
+app.get('/api/decks/:deckName', async (req, res) => {
+    try {
+        const { deckName } = req.params;
+        const fs = require('fs');
+        const path = require('path');
+        const decksDir = path.join(__dirname, 'decks');
+        
+        // Find the deck file
+        const deckFiles = fs.readdirSync(decksDir).filter(file => file.endsWith('.json'));
+        let deckData = null;
+        let deckFile = null;
+        
+        for (const file of deckFiles) {
+            const deckPath = path.join(decksDir, file);
+            const data = JSON.parse(fs.readFileSync(deckPath, 'utf8'));
+            if (data.deck_name === deckName) {
+                deckData = data;
+                deckFile = file;
+                break;
+            }
+        }
+        
+        if (!deckData) {
+            return res.json({ success: false, error: 'Deck not found' });
+        }
+        
+        // Look up full card data from MongoDB
+        const cardsCollection = db.collection(`cards_${deckData.set.replace(/\s+/g, '_')}`);
+        const fullDeck = [];
+        
+        for (const cardEntry of deckData.cards) {
+            try {
+                const card = await cardsCollection.findOne({ name: cardEntry.name });
+                if (card) {
+                    // Add quantity for this card
+                    for (let i = 0; i < cardEntry.quantity; i++) {
+                        fullDeck.push(card);
+                    }
+                } else {
+                    console.warn(`Card not found in MongoDB: ${cardEntry.name}`);
+                }
+            } catch (error) {
+                console.error(`Error looking up card ${cardEntry.name}:`, error);
+            }
+        }
+        
+        res.json({
+            success: true,
+            deck: {
+                name: deckData.deck_name,
+                set: deckData.set,
+                vigor: deckData.vigor,
+                cards: fullDeck
+            }
+        });
+    } catch (error) {
+        console.error('Error loading deck:', error);
+        res.json({ success: false, error: error.message });
+    }
+});
+
 // Get cards from a specific set
 app.get('/api/cards/:setName', (req, res) => {
     const { setName } = req.params;
