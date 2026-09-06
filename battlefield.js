@@ -15,6 +15,16 @@ function handleCardImageError(img, color, emoji, centered) {
     parent.appendChild(span);
 }
 
+// Normalize raw card "type" values (e.g. "Primordial Being") from MongoDB into the
+// lowercase single-word types ('primordial', 'creature', etc.) used throughout this file
+function normalizeCardType(rawType) {
+    if (!rawType) return rawType;
+    const lower = rawType.toLowerCase();
+    const knownTypes = ['primordial', 'vigor', 'rune', 'equipment', 'creature'];
+    const match = knownTypes.find(type => lower.includes(type));
+    return match || lower.replace(/\s+/g, '-');
+}
+
 // Game State Management
 class GameState {
     constructor() {
@@ -1111,7 +1121,7 @@ document.addEventListener('DOMContentLoaded', () => {
         try {
             const deckData = JSON.parse(storedDeck);
             console.log('Loading pre-made deck:', deckData.name);
-            gameState.player.deck = deckData.cards;
+            gameState.player.deck = deckData.cards.map(card => ({ ...card, type: normalizeCardType(card.type) }));
         } catch (error) {
             console.error('Error loading stored deck:', error);
             gameState.player.deck = CardGenerator.generateDeck();
