@@ -906,6 +906,14 @@ class BattlefieldUI {
                 cardEl.draggable = true;
             }
             
+            // Use correct field names from card data
+            const attack = card.ap || card.attack || 0;
+            const defense = card.dp || card.defense || 0;
+            const vigorType = card.vigor || card.vigor_type;
+            const manaCost = card['Mana Card Cost'] || card.manaCost || 0;
+            const color = card.color || this.getColorForVigor(vigorType);
+            const cardImage = card.standard_path || card.image;
+            
             // Different card display based on type
             let cardContent = '';
             
@@ -914,65 +922,81 @@ class BattlefieldUI {
                     <div class="card-cost">0</div>
                     <div class="card-name">${card.name}</div>
                     <div class="card-image vigor-icon">
-                        <span style="font-size: 3em;">💎</span>
+                        <img src="${cardImage}" alt="${card.name}" onerror="this.style.display='none'; this.parentElement.style.background='${color}'; this.parentElement.innerHTML='<span style=\'font-size:3em; position:absolute; top:50%; left:50%; transform:translate(-50%, -50%);\'>💎</span>'">
                     </div>
                     <div class="card-description">+1 Mana</div>
                 `;
             } else if (card.type === 'primordial') {
                 cardContent = `
-                    <div class="card-cost">0</div>
+                    <div class="card-cost">${manaCost}</div>
                     <div class="card-name primordial-name">${card.name}</div>
                     <div class="card-image">
-                        <img src="${card.standard_path || card.image}" alt="${card.name}" onerror="this.style.display='none'; this.parentElement.style.background='${card.color}'; this.parentElement.innerHTML='<span style=\'font-size:3em; position:absolute; top:50%; left:50%; transform:translate(-50%, -50%);\'>👑</span>'">
+                        <img src="${cardImage}" alt="${card.name}" onerror="this.style.display='none'; this.parentElement.style.background='${color}'; this.parentElement.innerHTML='<span style=\'font-size:3em; position:absolute; top:50%; left:50%; transform:translate(-50%, -50%);\'>👑</span>'">
                     </div>
                     <div class="card-stats">
-                        <span class="card-attack">⚔${card.attack}</span>
-                        <span class="card-defense">🛡${card.defense}</span>
+                        <span class="card-attack">⚔${attack}</span>
+                        <span class="card-defense">🛡${defense}</span>
                     </div>
                     <div class="card-primordial-indicator">👑 KING</div>
                 `;
             } else if (card.type === 'rune') {
                 cardContent = `
-                    <div class="card-cost">${card.manaCost}</div>
+                    <div class="card-cost">${manaCost}</div>
                     <div class="card-name">${card.name}</div>
                     <div class="card-image rune-icon">
-                        <span style="font-size: 3em;">✨</span>
+                        <img src="${cardImage}" alt="${card.name}" onerror="this.style.display='none'; this.parentElement.style.background='${color}'; this.parentElement.innerHTML='<span style=\'font-size:3em;\'>✨</span>'">
                     </div>
                     <div class="card-description">One-time use</div>
                 `;
             } else if (card.type === 'equipment') {
                 cardContent = `
-                    <div class="card-cost">${card.manaCost}</div>
+                    <div class="card-cost">${manaCost}</div>
                     <div class="card-name">${card.name}</div>
+                    <div class="card-class">${card.className || ''}</div>
                     <div class="card-image equipment-icon">
-                        <span style="font-size: 3em;">⚔️</span>
+                        <img src="${cardImage}" alt="${card.name}" onerror="this.style.display='none'; this.parentElement.style.background='${color}'; this.parentElement.innerHTML='<span style=\'font-size:3em;\'>⚔️</span>'">
                     </div>
                     <div class="card-stats">
-                        <span class="card-attack">+${card.attack}</span>
-                        <span class="card-defense">+${card.defense}</span>
+                        <span class="card-attack">+${attack}</span>
+                        <span class="card-defense">+${defense}</span>
                     </div>
                     <div class="card-description">Attach to creature</div>
                 `;
             } else {
                 // Creature
                 cardContent = `
-                    <div class="card-cost">${card.manaCost}</div>
+                    <div class="card-cost">${manaCost}</div>
                     <div class="card-name">${card.name}</div>
+                    <div class="card-class">${card.className || ''}</div>
                     <div class="card-image">
-                        <img src="${card.standard_path || card.image}" alt="${card.name}" onerror="this.style.display='none'; this.parentElement.style.background='${card.color}'; this.parentElement.innerHTML='<span style=\'font-size:3em; position:absolute; top:50%; left:50%; transform:translate(-50%, -50%);\'>⚔️</span>'">
+                        <img src="${cardImage}" alt="${card.name}" onerror="this.style.display='none'; this.parentElement.style.background='${color}'; this.parentElement.innerHTML='<span style=\'font-size:3em; position:absolute; top:50%; left:50%; transform:translate(-50%, -50%);\'>⚔️</span>'">
                     </div>
                     <div class="card-stats">
-                        <span class="card-attack">⚔${card.attack}</span>
-                        <span class="card-defense">🛡${card.defense}</span>
+                        <span class="card-attack">⚔${attack}</span>
+                        <span class="card-defense">🛡${defense}</span>
                     </div>
+                    ${card.attacks && card.attacks.length > 0 ? `<div class="card-abilities">Click for attacks</div>` : ''}
                     ${card.attachedEquipment ? `<div class="card-equipment">⚔️+${card.attachedEquipment.attack}/🛡+${card.attachedEquipment.defense}</div>` : ''}
                 `;
             }
             
             cardEl.innerHTML = cardContent;
+            
+            // Add click handler for attack selection
+            if (card.attacks && card.attacks.length > 0) {
+                cardEl.addEventListener('click', () => this.showAttackOptions(card));
+            }
         }
         
         return cardEl;
+    }
+    
+    showAttackOptions(card) {
+        const options = card.attacks.map((attack, index) => 
+            `${index + 1}. ${attack.name} (${attack.description}) - Cost: ${attack.manaCost}`
+        ).join('\n');
+        
+        alert(`Attack Options for ${card.name}:\n\n${options}`);
     }
     
     render() {

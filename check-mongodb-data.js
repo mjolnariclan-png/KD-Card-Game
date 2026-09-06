@@ -23,14 +23,20 @@ async function checkMongoDBData() {
             
             // Get the cards collection for this set
             const cardsCollection = db.collection(`cards_${set.set_name.replace(/\s+/g, '_')}`);
-            const cards = await cardsCollection.find({}).limit(5).toArray();
+            const cards = await cardsCollection.find({}).limit(3).toArray();
             
-            console.log(`\nSample card data (first 5 cards):`);
+            console.log(`\nSample card data (first 3 cards) with all fields:`);
             for (const card of cards) {
                 console.log(`\nCard: ${card.name}`);
+                console.log(`  type: ${card.type}`);
+                console.log(`  attack: ${card.attack}`);
+                console.log(`  defense: ${card.defense}`);
+                console.log(`  vigor_type: ${card.vigor_type}`);
                 console.log(`  standard_path: ${card.standard_path}`);
                 console.log(`  image: ${card.image}`);
                 console.log(`  print_path: ${card.print_path}`);
+                console.log(`  color: ${card.color}`);
+                console.log(`  All fields:`, Object.keys(card));
             }
         }
         
