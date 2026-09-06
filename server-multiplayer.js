@@ -1,18 +1,79 @@
 const express = require('express');
 const path = require('path');
 const fs = require('fs');
+const { MongoClient } = require('mongodb');
+const { v2: cloudinary } = require('cloudinary');
 const app = express();
 const PORT = process.env.PORT || 3005;
+
+// MongoDB Connection
+const MONGODB_URI = process.env.MONGODB_URI || 'mongodb+srv://mjolnariclan17:JuPiTeR2015!@tcg-game-db.ak26dwh.mongodb.net/?appName=tcg-game-db';
+const DB_NAME = 'tcg-game-db';
+
+// Cloudinary Configuration
+cloudinary.config({
+    cloud_name: process.env.CLOUDINARY_CLOUD_NAME || 'sywzs1w9',
+    api_key: process.env.CLOUDINARY_API_KEY || '387367841542543',
+    api_secret: process.env.CLOUDINARY_API_SECRET || 'Ths41qxona37vsd6-VC6meebtTk'
+});
+
+let db = null;
+let client = null;
 
 // Game state management
 let games = {};
 let lobbyPlayers = [];
 
-// Card manifests cache
+// Card manifests cache (will be loaded from MongoDB)
 let cardManifests = {};
 let availableSets = [];
 
-// Load card manifests from B:\Sets
+// Connect to MongoDB
+async function connectToMongoDB() {
+    try {
+        client = new MongoClient(MONGODB_URI);
+        await client.connect();
+        console.log('Connected to MongoDB Atlas');
+        db = client.db(DB_NAME);
+
+        // Load card sets from database
+        await loadCardSetsFromDB();
+    } catch (error) {
+        console.error('Error connecting to MongoDB:', error);
+        console.log('Falling back to local file system');
+        loadCardManifests(); // Fallback to local files
+    }
+}
+
+// Load card sets from MongoDB
+async function loadCardSetsFromDB() {
+    try {
+        const setsCollection = db.collection('card_sets');
+        const sets = await setsCollection.find({}, { projection: { set_name: 1, base_total: 1, type_distribution: 1 } }).toArray();
+
+        availableSets = sets.map(set => set.set_name);
+        console.log(`Found ${sets.length} card sets in MongoDB: ${availableSets.join(', ')}`);
+
+        // Load each set's cards
+        for (const set of sets) {
+            const cardsCollection = db.collection(`cards_${set.set_name.replace(/\s+/g, '_')}`);
+            const cards = await cardsCollection.find({}).toArray();
+            cardManifests[set.set_name] = {
+                set_name: set.set_name,
+                base_total: set.base_total,
+                type_distribution: set.type_distribution,
+                cards: cards
+            };
+            console.log(`Loaded ${cards.length} cards for ${set.set_name}`);
+        }
+    } catch (error) {
+        console.error('Error loading card sets from MongoDB:', error);
+        // Fallback to local files
+        loadCardManifests();
+    }
+}
+
+// Fallback: Load card manifests from local files
 function loadCardManifests() {
     const setsPath = 'B:\\Sets';
     if (!fs.existsSync(setsPath)) {
@@ -41,9 +102,6 @@ function loadCardManifests() {
         }
     });
 }
-
-// Load manifests on startup
-loadCardManifests();
 
 // CORS middleware to allow cross-origin requests
 app.use((req, res, next) => {
@@ -1021,10 +1079,13 @@ function generateFallbackDeck(player) {
 }
 
 // Start server
-app.listen(PORT, '0.0.0.0', () => {
+app.listen(PORT, '0.0.0.0', async () => {
     console.log(`Game server is running on http://localhost:${PORT}`);
     console.log(`Main menu: http://localhost:${PORT}/index.html`);
     console.log(`Multiplayer: http://localhost:${PORT}/multiplayer.html`);
     console.log(`For network testing: http://YOUR_LOCAL_IP:${PORT}`);
     console.log(`To find your IP: run 'ipconfig' (Windows) or 'ifconfig' (Mac/Linux)`);
+
+    // Connect to MongoDB
+    await connectToMongoDB();
 });
